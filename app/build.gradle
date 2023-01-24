@@ -8,8 +8,8 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.ideastorm.v25001"
-        minSdk 25
+        applicationId 'com.ideastorm.v31001'
+        minSdk 31
         targetSdk 32
         versionCode 1
         versionName "1.0"
