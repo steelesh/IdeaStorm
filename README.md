@@ -165,3 +165,5 @@ The user can access the list after exiting the app and opening it again.
 ## Weekly Meeting
 
 Meeting Information
+
+Sunday at 8pm - Discord
