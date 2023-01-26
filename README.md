@@ -158,9 +158,10 @@ The user can access the list after exiting the app and opening it again.
 
 ## Scrum Roles
 
-- DevOps/Product Owner/Scrum Master:
-- Frontend Developer:
-- Integration Developer:
+- DevOps/Product Owner/Scrum Master: Steele Shreve
+- Frontend Developer: Matthew Thompson
+- Integration Developer: Logan Conley
+- Integration Developer: Alexander Robinson
 
 ## Weekly Meeting
 
