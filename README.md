@@ -142,7 +142,7 @@ The user can access the list after exiting the app and opening it again.
 
 ## Class Diagram
 
-![IdeaStorm UML Class Diagram](https://user-images.githubusercontent.com/94927484/213340243-43abfcf1-5fe2-4d81-a3ba-f49488df16e3.png)
+![IdeaStorm UML Class Diagram](https://user-images.githubusercontent.com/94927484/215356275-b2c22ecb-98f4-4614-a764-9dfdf066658a.png)
 
 ## Class Diagram Description
 
