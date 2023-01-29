@@ -39,7 +39,7 @@ Use your Android device to cure your boredom, seek new interests and spark your 
 
 #### Scenario
 
-A user wants to find an activity that meets their criteria: 3 participants, social activity, and low price.
+As a user hanging out with two friends, I want to find a social activity that involves 3 participants, and has a low price.
 
 #### Dependencies
 
@@ -90,7 +90,7 @@ The activity returned is a group activity.
 
 #### Scenario
 
-A user wants to save an activity that was generated and made certain it can be accessed again.
+As a bored user, I want to save an activity that was generated, so that I can find it again.
 
 #### Dependencies
 
