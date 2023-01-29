@@ -156,6 +156,8 @@ The user can access the list after exiting the app and opening it again.
 
 **IActivityDAO:** Interface for Retrofit to find and parse Activity JSON.
 
+**ISaveDAO:** Interface for Room to persist activity data
+
 ## Scrum Roles
 
 - DevOps/Product Owner/Scrum Master: Steele Shreve
