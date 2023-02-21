@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,7 +69,7 @@ fun OptionMenu(appName: String) {
         backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
         actions = {
             IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Default.Menu, "Navigation")
+                Icon(Icons.Default.MoreVert, "Navigation")
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false}) {
                 DropdownMenuItem(onClick = { Toast.makeText(context, "Account", Toast.LENGTH_SHORT).show() }) {
