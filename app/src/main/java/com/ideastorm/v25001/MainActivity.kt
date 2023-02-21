@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -228,7 +229,7 @@ fun GenerateActivityButton() {
             Button(onClick = {  }, modifier = Modifier
                 .width(250.dp)
                 .height(128.dp)) {
-                Text(text = "Generate Activity", fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
+                Text(text = stringResource(R.string.buttonText), fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
             }
         }
     }
