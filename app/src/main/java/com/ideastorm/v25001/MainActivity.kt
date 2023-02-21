@@ -119,7 +119,7 @@ fun ParticipantsSpinner() {
             .clickable { expanded = !expanded },
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically){
-            Text(text = participantText, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+            Text(text = participantText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
             Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 participantOptions.forEach {
@@ -155,7 +155,7 @@ fun ActivityTypeSpinner() {
             .clickable { expanded = !expanded },
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically){
-            Text(text = typeText, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+            Text(text = typeText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
             Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 typeOptions.forEach {
@@ -191,7 +191,7 @@ fun PriceSpinner() {
             .clickable { expanded = !expanded },
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically){
-            Text(text = priceText, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+            Text(text = priceText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
             Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 priceOptions.forEach {
