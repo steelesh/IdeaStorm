@@ -130,9 +130,9 @@ fun ParticipantsSpinner() {
         }
     }
 }
-
 /**
  * Creates a dropdown menu with options for selecting the type of activity
+ * @author Steele Shreve
  */
 @Composable
 fun ActivityTypeSpinner() {
