@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,7 +20,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
+
+var selectedParticipantOption: String? = null
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,27 +37,8 @@ class MainActivity : ComponentActivity() {
                 }
                 OptionMenu(getString(R.string.appName))
                 Greeting(getString(R.string.greeting))
+                ParticipantsSpinner()
             }
-        }
-    }
-}
-/**
- * Creates a message greeting the user with a friendly message.
- * @author Steele Shreve
- * @param greeting what message displays to user
- */
-@Composable
-fun Greeting(greeting: String) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .padding(top = 56.dp)
-                .fillMaxWidth()
-                .height(128.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = greeting, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
         }
     }
 }
@@ -81,6 +69,64 @@ fun OptionMenu(appName: String) {
             }
         }
     )
+}
+/**
+ * Creates a message greeting the user with a friendly message.
+ * @author Steele Shreve
+ * @param greeting what message displays to user
+ */
+@Composable
+fun Greeting(greeting: String) {
+    Box(modifier = Modifier
+        .fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(top = 56.dp)
+                .fillMaxWidth()
+                .height(128.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = greeting, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
+        }
+    }
+}
+
+/**
+ * Creates a dropdown menu with options for selecting the number of participants
+ * @author Steele Shreve
+ */
+@Composable
+fun ParticipantsSpinner() {
+    val participantOptions = listOf("One person", "Two person", "Group")
+    var participantText by remember { mutableStateOf("Number of participants") }
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = Modifier
+        .fillMaxWidth(),
+        contentAlignment = Alignment.Center){
+        Row(modifier = Modifier
+            .padding(top = 192.dp)
+            .width(250.dp)
+            .border(BorderStroke(1.dp, Color.Black))
+            .padding(16.dp)
+            .clickable { expanded = !expanded },
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically){
+            Text(text = participantText, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                participantOptions.forEach {
+                    participantOption -> DropdownMenuItem(onClick = {
+                        expanded = false
+                    participantText = participantOption
+                }) {
+                        Text(text = participantOption)
+                    selectedParticipantOption = participantOption
+                }
+                }
+            }
+        }
+    }
 }
 /**
  * Displays a preview for our layout in the IDE without AVD
