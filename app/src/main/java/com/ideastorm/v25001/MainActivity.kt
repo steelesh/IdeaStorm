@@ -25,6 +25,7 @@ import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 
 var selectedParticipantOption: String? = null
 var selectedTypeOption: String? = null
+var selectedPriceOption: String? = null
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
                 Greeting(getString(R.string.greeting))
                 ParticipantsSpinner()
                 ActivityTypeSpinner()
+                PriceSpinner()
             }
         }
     }
@@ -160,6 +162,42 @@ fun ActivityTypeSpinner() {
                 }) {
                     Text(text = typeOption)
                     selectedTypeOption = typeOption
+                }
+                }
+            }
+        }
+    }
+}
+/**
+ * Creates a dropdown menu with options for selecting the price range of activity
+ * @author Steele Shreve
+ */
+@Composable
+fun PriceSpinner() {
+    val priceOptions = listOf("Free", "Low", "High")
+    var priceText by remember { mutableStateOf("Price range") }
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = Modifier
+        .fillMaxWidth(),
+        contentAlignment = Alignment.Center){
+        Row(modifier = Modifier
+            .padding(top = 392.dp)
+            .width(250.dp)
+            .border(BorderStroke(1.dp, Color.Black))
+            .padding(16.dp)
+            .clickable { expanded = !expanded },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically){
+            Text(text = priceText, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                priceOptions.forEach {
+                        priceOption -> DropdownMenuItem(onClick = {
+                    expanded = false
+                    priceText = priceOption
+                }) {
+                    Text(text = priceOption)
+                    selectedPriceOption = priceOption
                 }
                 }
             }
