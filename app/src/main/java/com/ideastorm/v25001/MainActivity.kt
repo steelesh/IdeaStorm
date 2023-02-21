@@ -9,10 +9,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,11 +29,31 @@ class MainActivity : ComponentActivity() {
                 ) {
                 }
                 OptionMenu("IdeaStorm")
+                Greeting("Let's find an activity for you")
             }
         }
     }
 }
-
+/**
+ * Creates a message greeting the user with a friendly message.
+ * @author Steele Shreve
+ * @param greeting what message displays to user
+ */
+@Composable
+fun Greeting(greeting: String) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(top = 56.dp)
+                .fillMaxWidth()
+                .height(128.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = greeting, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
+        }
+    }
+}
 /**
  * Creates a TopAppBar with the app title on the left and a navigation menu on the right
  * @author Steele Shreve
@@ -59,7 +82,6 @@ fun OptionMenu(appName: String) {
         }
     )
 }
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
