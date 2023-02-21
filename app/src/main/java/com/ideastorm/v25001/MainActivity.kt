@@ -82,10 +82,15 @@ fun OptionMenu(appName: String) {
         }
     )
 }
+/**
+ * Displays a preview for our layout in the IDE without AVD
+ * @author Steele Shreve
+ */
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     IdeaStormTheme {
         OptionMenu("IdeaStorm")
+        Greeting("Let's find an activity for you")
     }
 }
