@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
                 ParticipantsSpinner()
                 ActivityTypeSpinner()
                 PriceSpinner()
+                GenerateActivityButton()
             }
         }
     }
@@ -203,6 +204,31 @@ fun PriceSpinner() {
                     selectedPriceOption = priceOption
                 }
                 }
+            }
+        }
+    }
+}
+
+/**
+ * Creates a button that generates an activity with respect to the user-specified filters
+ * @author Steele Shreve
+ */
+@Composable
+fun GenerateActivityButton() {
+    Box(modifier = Modifier
+        .fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .padding(top = 492.dp)
+                .fillMaxWidth()
+                .height(56.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(onClick = {  }, modifier = Modifier
+                .width(250.dp)
+                .height(128.dp)) {
+                Text(text = "Generate Activity", fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
             }
         }
     }
