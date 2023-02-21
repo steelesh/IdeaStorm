@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 
 var selectedParticipantOption: String? = null
+var selectedTypeOption: String? = null
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
                 OptionMenu(getString(R.string.appName))
                 Greeting(getString(R.string.greeting))
                 ParticipantsSpinner()
+                ActivityTypeSpinner()
             }
         }
     }
@@ -122,6 +124,42 @@ fun ParticipantsSpinner() {
                 }) {
                         Text(text = participantOption)
                     selectedParticipantOption = participantOption
+                }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Creates a dropdown menu with options for selecting the type of activity
+ */
+@Composable
+fun ActivityTypeSpinner() {
+    val typeOptions = listOf("Education", "Recreational", "Social", "Diy", "Charity", "Cooking", "Relaxation", "Music", "Busywork")
+    var typeText by remember { mutableStateOf("Activity type") }
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = Modifier
+        .fillMaxWidth(),
+        contentAlignment = Alignment.Center){
+        Row(modifier = Modifier
+            .padding(top = 292.dp)
+            .width(250.dp)
+            .border(BorderStroke(1.dp, Color.Black))
+            .padding(16.dp)
+            .clickable { expanded = !expanded },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically){
+            Text(text = typeText, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
+            Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                typeOptions.forEach {
+                        typeOption -> DropdownMenuItem(onClick = {
+                    expanded = false
+                    typeText = typeOption
+                }) {
+                    Text(text = typeOption)
+                    selectedTypeOption = typeOption
                 }
                 }
             }
