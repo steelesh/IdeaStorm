@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">IdeaStorm</string>
+    <string name="appName">IdeaStorm</string>
+    <string name="greeting">Let\'s find an activity for you</string>
 </resources>

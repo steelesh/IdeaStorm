@@ -28,8 +28,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                 }
-                OptionMenu("IdeaStorm")
-                Greeting("Let's find an activity for you")
+                OptionMenu(getString(R.string.appName))
+                Greeting(getString(R.string.greeting))
             }
         }
     }
@@ -90,7 +90,5 @@ fun OptionMenu(appName: String) {
 @Composable
 fun DefaultPreview() {
     IdeaStormTheme {
-        OptionMenu("IdeaStorm")
-        Greeting("Let's find an activity for you")
     }
 }
