@@ -27,6 +27,9 @@ var selectedParticipantOption: String? = null
 var selectedTypeOption: String? = null
 var selectedPriceOption: String? = null
 
+/**
+ * This class represents the main activity for the IdeaStorm app and sets up the UI layout and theme
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
