@@ -47,4 +47,20 @@ class ActivityTests {
         }
         assertTrue(hasThreeParticipants)
     }
+
+    @Test
+    fun `Given activity data is available when I specify a social activity then the activity should be social`() = runTest {
+        givenActivityServiceIsInitialized()
+        whenActivityDataIsReadAndParsed()
+        thenTheActivityShouldBeSocial()
+    }
+
+    private fun thenTheActivityShouldBeSocial() {
+        assertNotNull(activity)
+        var isSocial = false
+        if (activity.type.equals(("social"))) {
+            isSocial = true
+        }
+        assertTrue(isSocial)
+    }
 }
