@@ -17,7 +17,7 @@ class ActivityTests {
     private var activity = Activity("", 0f, "",0,0f,"", 0)
 
     @Test
-    fun `Given activity data is available when I want non-nullable data then should return an activity`() = runTest {
+    fun `Given activity data is available when I want non-nullable data then an activty should be returned`() = runTest {
         givenActivityServiceIsInitialized()
         whenActivityDataIsReadAndParsed()
         thenTheActivityShouldNotBeNull()
