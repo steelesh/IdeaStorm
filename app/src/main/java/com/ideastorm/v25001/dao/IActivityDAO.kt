@@ -5,6 +5,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface IActivityDAO {
-    @GET("/activity")
+    @GET("activity")
     fun getActivity() : Call<Activity>
 }
