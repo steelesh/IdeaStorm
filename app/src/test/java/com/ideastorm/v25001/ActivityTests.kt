@@ -5,6 +5,7 @@ import com.ideastorm.v25001.dto.Activity
 import com.ideastorm.v25001.service.ActivityService
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -30,5 +31,20 @@ class ActivityTests {
     }
     private fun thenTheActivityShouldNotBeNull() {
         assertNotNull(activity)
+    }
+
+    @Test
+    fun `Given activity data is available when I specify three participants then the activity should have three participants`() = runTest {
+        givenActivityServiceIsInitialized()
+        whenActivityDataIsReadAndParsed()
+        thenTheActivityShouldHaveThreeParticipants()
+    }
+    private fun thenTheActivityShouldHaveThreeParticipants() {
+        assertNotNull(activity)
+        var hasThreeParticipants = false
+        if (activity.participants.equals((3))) {
+            hasThreeParticipants = true
+        }
+        assertTrue(hasThreeParticipants)
     }
 }
