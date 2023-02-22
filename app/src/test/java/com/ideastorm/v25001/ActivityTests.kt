@@ -19,8 +19,14 @@ class ActivityTests {
     }
 
     @Test
-    fun 'Given activity data is available when I specifcy the social type then I should receive an activity that is social'() {
+    fun 'Given activity data is available when I specify a social activity then I should receive a social activity'() {
         var activity = Activity(type: "social")
-        Assert.assertTrue(activity.participants.equals("social"))
+        Assert.assertTrue(activity.type.equals("social"))
+    }
+
+    @Test
+    fun 'Given activity data is available when I specifcy a low price then I should receive an activity that is a low price'() {
+        var activity = Activity(price: "low")
+        Assert.assertTrue(activity.price.equals("low"))
     }
 }
