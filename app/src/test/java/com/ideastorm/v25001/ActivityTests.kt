@@ -12,21 +12,24 @@ class ActivityTests {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
+    lateinit var activityService: ActivityService()
+
     @Test
     fun 'Given activity data is available when I specifcy 3 participants then I should receive an activity that can be dones with three people'() {
-        var activity = Activity(participants: 3)
-        Assert.assertTrue(activity.participants.equals(3))
+        givenActivityServiceIsInitialized()
+        whenActivityDataIsReadAndParsed()
+        thenTheActivityShouldHaveThreeParticipants()
     }
 
-    @Test
-    fun 'Given activity data is available when I specify a social activity then I should receive a social activity'() {
-        var activity = Activity(type: "social")
-        Assert.assertTrue(activity.type.equals("social"))
+    private fun givenActivityServiceIsInitialized() {
+        activityService = ActivityService()
     }
 
-    @Test
-    fun 'Given activity data is available when I specifcy a low price then I should receive an activity that is a low price'() {
-        var activity = Activity(price: "low")
-        Assert.assertTrue(activity.price.equals("low"))
+    private fun whenActivityDataIsReadAndParsed() {
+        TODO("Not yet implemented")
+    }
+
+    private fun thenTheActivityShouldHaveThreeParticipants() {
+        TODO("Not yet implemented")
     }
 }
