@@ -63,4 +63,20 @@ class ActivityTests {
         }
         assertTrue(isSocial)
     }
+
+    @Test
+    fun `Given activity data is available when I specify low price then the activity should have a low price`() = runTest {
+        givenActivityServiceIsInitialized()
+        whenActivityDataIsReadAndParsed()
+        thenTheActivityShouldHaveLowPrice()
+    }
+
+    private fun thenTheActivityShouldHaveLowPrice() {
+        assertNotNull(activity)
+        var hasLowPrice = false
+        if (activity.price < 30.0) {
+            hasLowPrice = true
+        }
+        assertTrue(hasLowPrice)
+    }
 }
