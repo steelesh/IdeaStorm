@@ -98,7 +98,7 @@ class ActivityTests {
     private fun thenTheActivityShouldHaveLowPrice() {
         assertNotNull(activity)
         var hasLowPrice = false
-        if (activity.price.equals(0)) {
+        if (activity.price == (0f)) {
             hasLowPrice = true
         }
         assertTrue(hasLowPrice)
