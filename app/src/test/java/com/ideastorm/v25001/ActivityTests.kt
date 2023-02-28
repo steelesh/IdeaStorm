@@ -3,6 +3,7 @@ package com.ideastorm.v25001
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.ideastorm.v25001.dto.Activity
 import com.ideastorm.v25001.service.ActivityService
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -16,6 +17,7 @@ class ActivityTests {
     private lateinit var activityService : ActivityService
     private var activity = Activity("", 0f, "",0,0f,"", 0)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `Given activity data is available when I want non-nullable data then an activity should be returned`() = runTest {
         givenActivityServiceIsInitialized()
@@ -33,6 +35,7 @@ class ActivityTests {
         assertNotNull(activity)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `Given activity data is available when I specify three participants then the activity should have three participants`() = runTest {
         givenActivityServiceIsInitialized()
@@ -42,12 +45,13 @@ class ActivityTests {
     private fun thenTheActivityShouldHaveThreeParticipants() {
         assertNotNull(activity)
         var hasThreeParticipants = false
-        if (activity.participants.equals((3))) {
+        if (activity.participants == (3)) {
             hasThreeParticipants = true
         }
         assertTrue(hasThreeParticipants)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `Given activity data is available when I specify a social activity then the activity should be social`() = runTest {
         givenActivityServiceIsInitialized()
@@ -58,12 +62,13 @@ class ActivityTests {
     private fun thenTheActivityShouldBeSocial() {
         assertNotNull(activity)
         var isSocial = false
-        if (activity.type.equals(("social"))) {
+        if (activity.type == ("social")) {
             isSocial = true
         }
         assertTrue(isSocial)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `Given activity data is available when I specify low price then the activity should have a low price`() = runTest {
         givenActivityServiceIsInitialized()
