@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ideastorm.v25001.dto.Activity
@@ -55,6 +56,7 @@ class MainActivity : ComponentActivity() {
                 ActivityTypeSpinner()
                 PriceSpinner()
                 GenerateActivityButton()
+                //GenerateActivityButtonRow()
             }
         }
     }
@@ -133,7 +135,7 @@ fun ParticipantsSpinner() {
             Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 participantOptions.forEach {
-                    participantOption -> DropdownMenuItem(onClick = {
+                        participantOption -> DropdownMenuItem(onClick = {
                         expanded = false
                     participantText = participantOption
                 }) {
@@ -222,26 +224,34 @@ fun PriceSpinner() {
  * Creates a button that generates an activity with respect to the user-specified filters
  * @author Steele Shreve
  */
+
 @Composable
 fun GenerateActivityButton() {
-    Box(modifier = Modifier
-        .fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .padding(top = 492.dp)
-                .fillMaxWidth()
-                .height(56.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        GenerateActivityButtonRow()
+    }
+}
+
+@Composable
+fun GenerateActivityButtonRow() {
+    Row(
+        modifier = Modifier
+            .padding(top = 492.dp)
+            .fillMaxWidth()
+            .height(56.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
             Button(onClick = {  }, modifier = Modifier
                 .width(250.dp)
                 .height(128.dp)) {
                 Text(text = stringResource(R.string.buttonText), fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
             }
-        }
     }
 }
+
+
+
 /**
  * Displays a preview for our layout in the IDE without AVD
  * @author Steele Shreve

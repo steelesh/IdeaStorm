@@ -29,21 +29,18 @@ class ActivityUnitTests {
     private val mainThreadSurrogate = newSingleThreadContext("Main Thread")
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @Before
-    fun initMocksAndMainThread() {
+    @Before fun initMocksAndMainThread() {
         MockKAnnotations.init(this)
         Dispatchers.setMain(mainThreadSurrogate)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
+    @After fun tearDown() {
         Dispatchers.resetMain()
         mainThreadSurrogate.close()
     }
 
-    @Test
-    fun `given a view model with live data when populated with activity then results show sample activity`() {
+    @Test fun `given a view model with live data when populated with activity then results show sample activity`() {
         givenViewModelIsInitializedWithMockData()
         whenActivityServiceFetchActivityInvoked()
         thenResultsShouldContainSampleActivity()

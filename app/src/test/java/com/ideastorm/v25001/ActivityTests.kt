@@ -18,8 +18,7 @@ class ActivityTests {
     private var activity = Activity("", 0f, "",0,0f,"", 0)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `Given activity data is available when I want non-nullable data then an activity should be returned`() = runTest {
+    @Test fun `Given activity data is available when I want non-nullable data then an activity should be returned`() = runTest {
         givenActivityServiceIsInitialized()
         whenActivityDataIsReadAndParsed()
         thenTheActivityShouldNotBeNull()
@@ -36,8 +35,7 @@ class ActivityTests {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `Given activity data is available when I specify three participants then the activity should have three participants`() = runTest {
+    @Test fun `Given activity data is available when I specify three participants then the activity should have three participants`() = runTest {
         givenActivityServiceIsInitialized()
         whenActivityDataIsReadAndParsed()
         thenTheActivityShouldHaveThreeParticipants()
@@ -52,8 +50,7 @@ class ActivityTests {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `Given activity data is available when I specify a social activity then the activity should be social`() = runTest {
+    @Test fun `Given activity data is available when I specify a social activity then the activity should be social`() = runTest {
         givenActivityServiceIsInitialized()
         whenActivityDataIsReadAndParsed()
         thenTheActivityShouldBeSocial()
@@ -69,8 +66,7 @@ class ActivityTests {
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `Given activity data is available when I specify low price then the activity should have a low price`() = runTest {
+    @Test fun `Given activity data is available when I specify low price then the activity should have a low price`() = runTest {
         givenActivityServiceIsInitialized()
         whenActivityDataIsReadAndParsed()
         thenTheActivityShouldHaveLowPrice()
