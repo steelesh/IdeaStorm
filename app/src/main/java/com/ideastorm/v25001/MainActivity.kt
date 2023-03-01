@@ -187,7 +187,7 @@ fun ActivityTypeSpinner() {
  * Creates a dropdown menu with options for selecting the price range of activity
  * @author Steele Shreve
  */
-@Composable
+/*@Composable
 fun PriceSpinner() {
     val priceOptions = listOf("Free", "Low", "High")
     var priceText by remember { mutableStateOf("Price range") }
@@ -218,7 +218,50 @@ fun PriceSpinner() {
             }
         }
     }
+}*/
+
+sealed class PriceOption(val displayName: String) {
+    object Free : PriceOption("Free")
+    object Low : PriceOption("Low")
+    object High : PriceOption("High")
 }
+
+@Composable
+fun PriceSpinner() {
+    val priceOptions = listOf(PriceOption.Free, PriceOption.Low, PriceOption.High)
+    var selectedPriceOption by remember { mutableStateOf<PriceOption?>(null) }
+    var expanded by remember { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Row(
+            modifier = Modifier
+                .padding(top = 392.dp)
+                .width(250.dp)
+                .border(BorderStroke(1.dp, Color.Black))
+                .padding(16.dp)
+                .clickable { expanded = !expanded },
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = selectedPriceOption?.displayName ?: "Price range",
+                fontSize = 16.sp,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "Dropdown arrow")
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                priceOptions.forEach { priceOption ->
+                    DropdownMenuItem(onClick = {
+                        expanded = false
+                        selectedPriceOption = priceOption
+                    }) {
+                        Text(text = priceOption.displayName)
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 /**
  * Creates a button that generates an activity with respect to the user-specified filters
