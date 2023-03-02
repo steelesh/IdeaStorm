@@ -216,6 +216,8 @@ fun PriceSpinner() {
  */
 @Composable
 fun GenerateActivityButton() {
+    var showLoader by remember{mutableStateOf(false)}
+    var isButtonEnabled  by remember{mutableStateOf(true)}
     Box(modifier = Modifier
         .fillMaxSize()) {
         Row(
@@ -226,13 +228,34 @@ fun GenerateActivityButton() {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(onClick = {  }, modifier = Modifier
+            Button(enabled = isButtonEnabled, onClick = { showLoader = !showLoader; isButtonEnabled = false }, modifier = Modifier
                 .width(250.dp)
                 .height(128.dp)) {
                 Text(text = stringResource(R.string.buttonText), fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
             }
         }
     }
+    if(showLoader){
+        DisplayLoader()
+    }
+}
+
+@Composable
+fun DisplayLoader() {
+    Box(modifier = Modifier
+        .fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .padding(top = 592.dp)
+                .fillMaxWidth()
+                .height(56.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
 }
 /**
  * Displays a preview for our layout in the IDE without AVD
