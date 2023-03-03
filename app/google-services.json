@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "459107998492",
+    "project_id": "ideastorm-125ae",
+    "storage_bucket": "ideastorm-125ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459107998492:android:4a08fe781615f75d0d78d9",
+        "android_client_info": {
+          "package_name": "com.ideastorm.v31001"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459107998492-tc6s589kfvp47fn64575gr98lqjd7ndi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOcpkjXuROvBAasGL6TxZ7FC-cOR5-o7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459107998492-tc6s589kfvp47fn64575gr98lqjd7ndi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
