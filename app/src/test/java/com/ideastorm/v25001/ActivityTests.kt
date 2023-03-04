@@ -35,11 +35,7 @@ class ActivityTests {
         assertNotNull(activity)
     }
 
-    /*
- This unit test would never pass. In the previous state activity.type was never assigned to be social. So the isSocial the variable would never be true.
- Make sure that unit tests are running and you know what "activity" has in all of its attributes if you are testing them. Since you're not working with
- actual data yet you need to make your own data to make these test run.
-  */
+
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `Given activity data is available when I specify three participants then the activity should have three participants`() = runTest {
@@ -66,11 +62,7 @@ class ActivityTests {
     }
 
 
-    /*
-    This unit test would never pass. In the previous state activity.type was never assigned to be social. So the isSocial the variable would never be true.
-    Make sure that unit tests are running and you know what "activity" has in all of its attributes if you are testing them. Since you're not working with
-    actual data yet you need to make your own data to make these test run.
-     */
+
     private fun thenTheActivityShouldBeSocial() {
         assertNotNull(activity)
         activity.type = "social"
