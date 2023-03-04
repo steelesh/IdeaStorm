@@ -74,7 +74,7 @@ fun OptionMenu(appName: String) {
         backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
         actions = {
             IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Default.MoreVert, "Navigation")
+                Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false}) {
                 DropdownMenuItem(onClick = { Toast.makeText(context, "Account", Toast.LENGTH_SHORT).show() }) {
@@ -115,7 +115,9 @@ fun Greeting(greeting: String) {
  */
 @Composable
 fun ParticipantsSpinner() {
-    val participantOptions = listOf("One person", "Two person", "Group")
+    val participantOptions = listOf(stringResource(R.string.OnePerson), stringResource(R.string.TwoPerson), stringResource(
+            R.string.Group)
+        )
     var participantText by remember { mutableStateOf("Number of participants") }
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier
@@ -151,7 +153,11 @@ fun ParticipantsSpinner() {
  */
 @Composable
 fun ActivityTypeSpinner() {
-    val typeOptions = listOf("Education", "Recreational", "Social", "Diy", "Charity", "Cooking", "Relaxation", "Music", "Busywork")
+    val typeOptions = listOf(stringResource(R.string.Education), stringResource(R.string.Recreational), stringResource(
+            R.string.Social), stringResource(R.string.Diy), stringResource(R.string.Charity), stringResource(
+                    R.string.Cooking), stringResource(R.string.Relaxation), stringResource(R.string.Music), stringResource(
+                            R.string.Busywork)
+                        )
     var typeText by remember { mutableStateOf("Activity type") }
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier
@@ -187,7 +193,9 @@ fun ActivityTypeSpinner() {
  */
 @Composable
 fun PriceSpinner() {
-    val priceOptions = listOf("Free", "Low", "High")
+    val priceOptions = listOf(stringResource(R.string.Free), stringResource(R.string.Low), stringResource(
+            R.string.High)
+        )
     var priceText by remember { mutableStateOf("Price range") }
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier
