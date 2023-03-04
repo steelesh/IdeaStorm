@@ -13,6 +13,8 @@ interface IActivityService {
 }
 
 class ActivityService : IActivityService {
+
+    //function to retrieve all Activities in the JSON
     override suspend fun fetchActivity() : Activity {
         return withContext(Dispatchers.IO) {
             val service = RetrofitClientInstance.retrofitInstance?.create(IActivityDAO::class.java)
