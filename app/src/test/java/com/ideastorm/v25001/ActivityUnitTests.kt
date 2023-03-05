@@ -73,7 +73,7 @@ class ActivityUnitTests {
         Assert.assertNotNull(activity)
         Assert.assertTrue(true)
         var containsSampleActivity = false
-        if (activity.activity == "Sample Activity") {
+        if (activity.activityName == "Sample Activity") {
             containsSampleActivity = true
         }
         Assert.assertTrue(containsSampleActivity)

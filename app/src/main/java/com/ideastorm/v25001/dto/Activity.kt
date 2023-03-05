@@ -2,11 +2,10 @@ package com.ideastorm.v25001.dto
 
 import com.google.gson.annotations.SerializedName
 data class Activity(@SerializedName("activity")
-                    var activity: String,
+                    var activityName: String,
                     /*
                     @SerializedName("accessibility")
                     var accessibility: Float,
-
                      */
                     @SerializedName("type")
                     var type: String,
@@ -22,6 +21,6 @@ data class Activity(@SerializedName("activity")
                     )
                      {
     override fun toString(): String {
-        return activity
+        return activityName
     }
 }
