@@ -9,7 +9,7 @@ import com.ideastorm.v25001.service.IActivityService
 import kotlinx.coroutines.launch
 
 class MainViewModel(var activityService : IActivityService = ActivityService()) : ViewModel() {
-    var activity : MutableLiveData<Activity> = MutableLiveData<Activity>()
+    private var activity : MutableLiveData<Activity> = MutableLiveData<Activity>()
 
     fun fetchActivity() {
         viewModelScope.launch {
