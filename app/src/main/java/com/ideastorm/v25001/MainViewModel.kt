@@ -12,9 +12,14 @@ class MainViewModel(var activityService : IActivityService = ActivityService()) 
     private var activity : MutableLiveData<Activity> = MutableLiveData<Activity>()
 
     fun fetchActivity() {
-        viewModelScope.launch {
-            var innerActivity = activityService.fetchActivity()
-            activity.postValue(innerActivity)
+        try {
+            viewModelScope.launch {
+                var innerActivity = activityService.fetchActivity()
+                activity.postValue(innerActivity)
+            }
+        } catch (e: Exception) {
+            throw IllegalArgumentException(e)
         }
+
     }
 }
