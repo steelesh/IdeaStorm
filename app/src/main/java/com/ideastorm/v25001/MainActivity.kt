@@ -1,5 +1,6 @@
 package com.ideastorm.v25001
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -18,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,7 +74,7 @@ fun OptionMenu(appName: String) {
         backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
         actions = {
             IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
+                Icon(Icons.Default.MoreVert, Resources.getSystem().getString(R.string.Navigation))
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false}) {
                 DropdownMenuItem(onClick = { Toast.makeText(context, "Account", Toast.LENGTH_SHORT).show() }) {
@@ -115,7 +115,7 @@ fun Greeting(greeting: String) {
  */
 @Composable
 fun ParticipantsSpinner() {
-    val participantOptions = listOf(stringResource(R.string.OnePerson), stringResource(R.string.TwoPerson), stringResource(
+    val participantOptions = listOf(Resources.getSystem().getString(R.string.OnePerson), Resources.getSystem().getString(R.string.TwoPerson), Resources.getSystem().getString(
             R.string.Group)
         )
     var participantText by remember { mutableStateOf("Number of participants") }
@@ -153,9 +153,10 @@ fun ParticipantsSpinner() {
  */
 @Composable
 fun ActivityTypeSpinner() {
-    val typeOptions = listOf(stringResource(R.string.Education), stringResource(R.string.Recreational), stringResource(
-            R.string.Social), stringResource(R.string.Diy), stringResource(R.string.Charity), stringResource(
-                    R.string.Cooking), stringResource(R.string.Relaxation), stringResource(R.string.Music), stringResource(
+    val typeOptions = listOf(
+        Resources.getSystem().getString(R.string.Education), Resources.getSystem().getString(R.string.Recreational), Resources.getSystem().getString(
+            R.string.Social), Resources.getSystem().getString(R.string.Diy), Resources.getSystem().getString(R.string.Charity), Resources.getSystem().getString(
+                    R.string.Cooking), Resources.getSystem().getString(R.string.Relaxation), Resources.getSystem().getString(R.string.Music), Resources.getSystem().getString(
                             R.string.Busywork)
                         )
     var typeText by remember { mutableStateOf("Activity type") }
@@ -193,7 +194,7 @@ fun ActivityTypeSpinner() {
  */
 @Composable
 fun PriceSpinner() {
-    val priceOptions = listOf(stringResource(R.string.Free), stringResource(R.string.Low), stringResource(
+    val priceOptions = listOf(Resources.getSystem().getString(R.string.Free), Resources.getSystem().getString(R.string.Low), Resources.getSystem().getString(
             R.string.High)
         )
     var priceText by remember { mutableStateOf("Price range") }
@@ -245,7 +246,7 @@ fun GenerateActivityButton() {
             Button(onClick = {  }, modifier = Modifier
                 .width(250.dp)
                 .height(128.dp)) {
-                Text(text = stringResource(R.string.buttonText), fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
+                Text(text = Resources.getSystem().getString(R.string.buttonText), fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
             }
         }
     }
