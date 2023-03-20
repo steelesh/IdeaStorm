@@ -1,5 +1,6 @@
 package com.ideastorm.v25001
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -254,9 +255,21 @@ fun GenerateActivityButton() {
  * Displays a preview for our layout in the IDE without AVD
  * @author Steele Shreve
  */
-@Preview(showBackground = true)
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
 @Composable
 fun DefaultPreview() {
     IdeaStormTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+        }
+        OptionMenu("IdeaStorm")
+        Greeting("Let's find an activity for you")
+        ParticipantsSpinner()
+        ActivityTypeSpinner()
+        PriceSpinner()
+        GenerateActivityButton()
     }
 }
