@@ -46,16 +46,17 @@ class MainActivity : ComponentActivity() {
             val activity by viewModel.activity.observeAsState(initial = emptyList<Activity>())
             IdeaStormTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.background
                 ) {
+                    OptionMenu(getString(R.string.appName))
+                    Greeting(getString(R.string.greeting))
+                    ParticipantsSpinner()
+                    ActivityTypeSpinner()
+                    PriceSpinner()
+                    GenerateActivityButton()
                 }
-                OptionMenu(getString(R.string.appName))
-                Greeting(getString(R.string.greeting))
-                ParticipantsSpinner()
-                ActivityTypeSpinner()
-                PriceSpinner()
-                GenerateActivityButton()
+
             }
         }
     }
@@ -121,8 +122,7 @@ fun ParticipantsSpinner() {
         )
     var participantText by remember { mutableStateOf("Number of participants") }
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = Modifier
-        .fillMaxWidth(),
+    Box(modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center){
         Row(modifier = Modifier
             .padding(top = 192.dp)
@@ -161,8 +161,7 @@ fun ActivityTypeSpinner() {
                         )
     var typeText by remember { mutableStateOf("Activity type") }
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = Modifier
-        .fillMaxWidth(),
+    Box(modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center){
         Row(modifier = Modifier
             .padding(top = 292.dp)
@@ -199,8 +198,7 @@ fun PriceSpinner() {
         )
     var priceText by remember { mutableStateOf("Price range") }
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = Modifier
-        .fillMaxWidth(),
+    Box(modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center){
         Row(modifier = Modifier
             .padding(top = 392.dp)
@@ -233,8 +231,7 @@ fun PriceSpinner() {
  */
 @Composable
 fun GenerateActivityButton() {
-    Box(modifier = Modifier
-        .fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
                 .padding(top = 492.dp)
@@ -261,15 +258,15 @@ fun GenerateActivityButton() {
 fun DefaultPreview() {
     IdeaStormTheme {
         Surface(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colors.background
         ) {
+            OptionMenu("IdeaStorm")
+            Greeting("Let's find an activity for you")
+            ParticipantsSpinner()
+            ActivityTypeSpinner()
+            PriceSpinner()
+            GenerateActivityButton()
         }
-        OptionMenu("IdeaStorm")
-        Greeting("Let's find an activity for you")
-        ParticipantsSpinner()
-        ActivityTypeSpinner()
-        PriceSpinner()
-        GenerateActivityButton()
     }
 }
