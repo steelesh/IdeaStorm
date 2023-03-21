@@ -73,7 +73,6 @@ fun OptionMenu(appName: String) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
         title = { Text(appName)},
-        backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
         actions = {
             IconButton(onClick = { showMenu = !showMenu }) {
                 Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
@@ -127,7 +126,7 @@ fun ParticipantsSpinner() {
         Row(modifier = Modifier
             .padding(top = 192.dp)
             .width(250.dp)
-            .border(BorderStroke(1.dp, Color.Black))
+            .border(BorderStroke(1.dp, MaterialTheme.colors.onBackground))
             .padding(16.dp)
             .clickable { expanded = !expanded },
         horizontalArrangement = Arrangement.Center,
@@ -166,7 +165,7 @@ fun ActivityTypeSpinner() {
         Row(modifier = Modifier
             .padding(top = 292.dp)
             .width(250.dp)
-            .border(BorderStroke(1.dp, Color.Black))
+            .border(BorderStroke(1.dp, MaterialTheme.colors.onBackground))
             .padding(16.dp)
             .clickable { expanded = !expanded },
             horizontalArrangement = Arrangement.Center,
@@ -203,7 +202,7 @@ fun PriceSpinner() {
         Row(modifier = Modifier
             .padding(top = 392.dp)
             .width(250.dp)
-            .border(BorderStroke(1.dp, Color.Black))
+            .border(BorderStroke(1.dp, MaterialTheme.colors.onBackground))
             .padding(16.dp)
             .clickable { expanded = !expanded },
             horizontalArrangement = Arrangement.Center,
