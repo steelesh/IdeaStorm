@@ -73,6 +73,7 @@ fun OptionMenu(appName: String) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
         title = { Text(appName)},
+        backgroundColor = MaterialTheme.colors.primary,
         actions = {
             IconButton(onClick = { showMenu = !showMenu }) {
                 Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
@@ -248,7 +249,7 @@ fun GenerateActivityButton() {
     }
 }
 /**
- * Displays a preview for our layout in the IDE without AVD
+ * Displays a preview for Light and Dark Mode in the IDE without AVD
  * @author Steele Shreve
  */
 @Preview(name = "Light Mode", showBackground = true)
