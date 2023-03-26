@@ -84,10 +84,10 @@ class MainActivity : ComponentActivity() {
         TopAppBar(
             modifier = Modifier.fillMaxWidth(),
             title = { Text(appName) },
-            backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
+            backgroundColor =  Color(android.graphics.Color.parseColor("#D9D9D9")),
             actions = {
                 IconButton(onClick = { showMenu = !showMenu }) {
-                    Icon(Icons.Default.MoreVert, "Navigation")
+                    Icon(Icons.Default.MoreVert, stringResource(R.string.navigation) )
                 }
                 DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                     DropdownMenuItem(onClick = {
@@ -97,12 +97,12 @@ class MainActivity : ComponentActivity() {
                             signIn()
                         }
                     }) {
-                        Text(text = "Account")
+                        Text(text = stringResource(R.string.account))
                     }
                     DropdownMenuItem(onClick = {
-                        Toast.makeText(context, "Exit", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.exit, Toast.LENGTH_SHORT).show()
                     }) {
-                        Text(text = "Exit")
+                        Text(text = stringResource(R.string.exit))
                     }
                 }
             }
@@ -169,7 +169,7 @@ class MainActivity : ComponentActivity() {
                     fontSize = 16.sp,
                     modifier = Modifier.padding(end = 8.dp)
                 )
-                Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
+                Icon(imageVector = Icons.Filled.ArrowDropDown, stringResource(R.string.dropdownArrow))
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     participantOptions.forEach { participantOption ->
                         DropdownMenuItem(onClick = {
@@ -220,7 +220,7 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = typeText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
-                Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
+                Icon(imageVector = Icons.Filled.ArrowDropDown, stringResource(R.string.dropdownArrow))
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     typeOptions.forEach { typeOption ->
                         DropdownMenuItem(onClick = {
@@ -261,7 +261,7 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = priceText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
-                Icon(imageVector = Icons.Filled.ArrowDropDown, "Dropdown arrow")
+                Icon(imageVector = Icons.Filled.ArrowDropDown, stringResource(R.string.dropdownArrow))
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     priceOptions.forEach { priceOption ->
                         DropdownMenuItem(onClick = {

@@ -3,4 +3,8 @@
     <string name="appName">IdeaStorm</string>
     <string name="greeting">Let\'s find an activity for you</string>
     <string name="buttonText">Generate Activity</string>
+    <string name="navigation">Navigation</string>
+    <string name="exit">Exit</string>
+    <string name="account">Account</string>
+    <string name="dropdownArrow">Dropdown arrow</string>
 </resources>
