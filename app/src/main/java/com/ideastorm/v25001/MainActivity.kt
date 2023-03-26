@@ -1,5 +1,6 @@
 package com.ideastorm.v25001
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -45,16 +46,17 @@ class MainActivity : ComponentActivity() {
             val activity by viewModel.activity.observeAsState(initial = emptyList<Activity>())
             IdeaStormTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.background
                 ) {
+                    OptionMenu(getString(R.string.appName))
+                    Greeting(getString(R.string.greeting))
+                    ParticipantsSpinner()
+                    ActivityTypeSpinner()
+                    PriceSpinner()
+                    GenerateActivityButton()
                 }
-                OptionMenu(getString(R.string.appName))
-                Greeting(getString(R.string.greeting))
-                ParticipantsSpinner()
-                ActivityTypeSpinner()
-                PriceSpinner()
-                GenerateActivityButton()
+
             }
         }
     }
@@ -71,7 +73,7 @@ fun OptionMenu(appName: String) {
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
         title = { Text(appName)},
-        backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
+        backgroundColor = MaterialTheme.colors.primary,
         actions = {
             IconButton(onClick = { showMenu = !showMenu }) {
                 Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
@@ -120,13 +122,12 @@ fun ParticipantsSpinner() {
         )
     var participantText by remember { mutableStateOf("Number of participants") }
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = Modifier
-        .fillMaxWidth(),
+    Box(modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center){
         Row(modifier = Modifier
             .padding(top = 192.dp)
             .width(250.dp)
-            .border(BorderStroke(1.dp, Color.Black))
+            .border(BorderStroke(1.dp, MaterialTheme.colors.onBackground))
             .padding(16.dp)
             .clickable { expanded = !expanded },
         horizontalArrangement = Arrangement.Center,
@@ -160,13 +161,12 @@ fun ActivityTypeSpinner() {
                         )
     var typeText by remember { mutableStateOf("Activity type") }
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = Modifier
-        .fillMaxWidth(),
+    Box(modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center){
         Row(modifier = Modifier
             .padding(top = 292.dp)
             .width(250.dp)
-            .border(BorderStroke(1.dp, Color.Black))
+            .border(BorderStroke(1.dp, MaterialTheme.colors.onBackground))
             .padding(16.dp)
             .clickable { expanded = !expanded },
             horizontalArrangement = Arrangement.Center,
@@ -198,13 +198,12 @@ fun PriceSpinner() {
         )
     var priceText by remember { mutableStateOf("Price range") }
     var expanded by remember { mutableStateOf(false) }
-    Box(modifier = Modifier
-        .fillMaxWidth(),
+    Box(modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center){
         Row(modifier = Modifier
             .padding(top = 392.dp)
             .width(250.dp)
-            .border(BorderStroke(1.dp, Color.Black))
+            .border(BorderStroke(1.dp, MaterialTheme.colors.onBackground))
             .padding(16.dp)
             .clickable { expanded = !expanded },
             horizontalArrangement = Arrangement.Center,
@@ -232,8 +231,7 @@ fun PriceSpinner() {
  */
 @Composable
 fun GenerateActivityButton() {
-    Box(modifier = Modifier
-        .fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
                 .padding(top = 492.dp)
@@ -251,12 +249,24 @@ fun GenerateActivityButton() {
     }
 }
 /**
- * Displays a preview for our layout in the IDE without AVD
+ * Displays a preview for Light and Dark Mode in the IDE without AVD
  * @author Steele Shreve
  */
-@Preview(showBackground = true)
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
 @Composable
 fun DefaultPreview() {
     IdeaStormTheme {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colors.background
+        ) {
+            OptionMenu("IdeaStorm")
+            Greeting("Let's find an activity for you")
+            ParticipantsSpinner()
+            ActivityTypeSpinner()
+            PriceSpinner()
+            GenerateActivityButton()
+        }
     }
 }
