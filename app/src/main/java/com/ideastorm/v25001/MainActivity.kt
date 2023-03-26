@@ -1,6 +1,5 @@
 package com.ideastorm.v25001
 
-import android.app.Activity.RESULT_OK
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -31,25 +30,29 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.ideastorm.v25001.dto.Activity
+import com.ideastorm.v25001.dto.User
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-var selectedParticipantOption: String? = null
-var selectedTypeOption: String? = null
-var selectedPriceOption: String? = null
 
 /**
  * This class represents the main activity for the IdeaStorm app and sets up the UI layout and theme
  */
 class MainActivity : ComponentActivity() {
-
+    var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    var selectedParticipantOption: String? = null
+    var selectedTypeOption: String? = null
+    var selectedPriceOption: String? = null
     private val viewModel: MainViewModel by viewModel<MainViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             viewModel.fetchActivity()
+            firebaseUser?.let {
+                val user = User(it.uid, "")
+                viewModel.user = user
+            }
+
             val activity by viewModel.activity.observeAsState(initial = emptyList<Activity>())
             IdeaStormTheme {
                 Surface(
@@ -76,6 +79,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun OptionMenu(appName: String) {
         var showMenu by remember { mutableStateOf(false) }
+        var showAccount by remember { mutableStateOf(false) }
         val context = LocalContext.current
         TopAppBar(
             modifier = Modifier.fillMaxWidth(),
@@ -86,7 +90,13 @@ class MainActivity : ComponentActivity() {
                     Icon(Icons.Default.MoreVert, "Navigation")
                 }
                 DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                    DropdownMenuItem(onClick = { signIn() }) {
+                    DropdownMenuItem(onClick = {
+                        if (viewModel.user != null) {
+                            showAccount = !showAccount
+                        } else {
+                            signIn()
+                        }
+                    }) {
                         Text(text = "Account")
                     }
                     DropdownMenuItem(onClick = {
@@ -97,6 +107,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
+        if(showAccount){
+            AccountMessage()
+        }
     }
 
     /**
@@ -303,6 +316,25 @@ class MainActivity : ComponentActivity() {
             DisplayLoader()
         }
     }
+    
+    @Composable
+    fun AccountMessage() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 592.dp)
+                    .fillMaxWidth()
+                    .height(56.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Already signed in! Working as expected!")
+            }
+        }
+    }
 
     @Composable
     fun DisplayLoader() {
@@ -356,7 +388,12 @@ class MainActivity : ComponentActivity() {
     private fun signInResult(result: FirebaseAuthUIAuthenticationResult) {
         val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
-            user = FirebaseAuth.getInstance().currentUser
+            firebaseUser = FirebaseAuth.getInstance().currentUser
+            firebaseUser?.let {
+                val user = User(it.uid, it.displayName)
+                viewModel.user = user
+                viewModel.saveUser()
+            }
         } else {
             Log.e("MainActivity.kt", "Error Logging in " + response?.error?.errorCode)
         }
