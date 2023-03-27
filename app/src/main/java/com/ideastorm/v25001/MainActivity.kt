@@ -49,15 +49,63 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.background
                 ) {
-                    OptionMenu(getString(R.string.appName))
-                    Greeting(getString(R.string.greeting))
-                    ParticipantsSpinner()
-                    ActivityTypeSpinner()
-                    PriceSpinner()
-                    GenerateActivityButton()
                 }
-
+                OptionMenu(getString(R.string.appName))
+                Greeting(getString(R.string.greeting))
+                ParticipantsSpinner()
+                ActivityTypeSpinner()
+                PriceSpinner()
+                GenerateActivityButton()
             }
+        }
+    }
+}
+/**
+ * Creates a TopAppBar with the app title on the left and a navigation menu on the right
+ * @author Steele Shreve
+ * @param appName name of the application
+ */
+@Composable
+fun OptionMenu(appName: String) {
+    var showMenu by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        title = { Text(appName)},
+        backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
+        actions = {
+            IconButton(onClick = { showMenu = !showMenu }) {
+                Icon(Icons.Default.MoreVert, "Navigation")
+            }
+            DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false}) {
+                DropdownMenuItem(onClick = { Toast.makeText(context, "Account", Toast.LENGTH_SHORT).show() }) {
+                    Text(text = "Account")
+                }
+                DropdownMenuItem(onClick = { Toast.makeText(context, "Exit", Toast.LENGTH_SHORT).show() }) {
+                    Text(text = "Exit")
+                }
+            }
+        }
+    )
+}
+/**
+ * Creates a message greeting the user with a friendly message.
+ * @author Steele Shreve
+ * @param greeting what message displays to user
+ */
+@Composable
+fun Greeting(greeting: String) {
+    Box(modifier = Modifier
+        .fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(top = 56.dp)
+                .fillMaxWidth()
+                .height(128.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = greeting, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
         }
     }
 }
@@ -231,7 +279,10 @@ fun PriceSpinner() {
  */
 @Composable
 fun GenerateActivityButton() {
-    Box(modifier = Modifier.fillMaxSize()) {
+    var showLoader by remember{mutableStateOf(false)}
+    var isButtonEnabled  by remember{mutableStateOf(true)}
+    Box(modifier = Modifier
+        .fillMaxSize()) {
         Row(
             modifier = Modifier
                 .padding(top = 492.dp)
@@ -240,14 +291,36 @@ fun GenerateActivityButton() {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(onClick = {  }, modifier = Modifier
+            Button(enabled = isButtonEnabled, onClick = { showLoader = !showLoader; isButtonEnabled = false }, modifier = Modifier
                 .width(250.dp)
                 .height(128.dp)) {
                 Text(text = stringResource(R.string.buttonText), fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
             }
         }
     }
+    if(showLoader){
+        DisplayLoader()
+    }
 }
+
+@Composable
+fun DisplayLoader() {
+    Box(modifier = Modifier
+        .fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .padding(top = 592.dp)
+                .fillMaxWidth()
+                .height(56.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CircularProgressIndicator()
+        }
+    }
+
+}
+
 /**
  * Displays a preview for Light and Dark Mode in the IDE without AVD
  * @author Steele Shreve
