@@ -60,34 +60,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-/**
- * Creates a TopAppBar with the app title on the left and a navigation menu on the right
- * @author Steele Shreve
- * @param appName name of the application
- */
-@Composable
-fun OptionMenu(appName: String) {
-    var showMenu by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    TopAppBar(
-        modifier = Modifier.fillMaxWidth(),
-        title = { Text(appName)},
-        backgroundColor = Color(android.graphics.Color.parseColor("#D9D9D9")),
-        actions = {
-            IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Default.MoreVert, "Navigation")
-            }
-            DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false}) {
-                DropdownMenuItem(onClick = { Toast.makeText(context, "Account", Toast.LENGTH_SHORT).show() }) {
-                    Text(text = "Account")
-                }
-                DropdownMenuItem(onClick = { Toast.makeText(context, "Exit", Toast.LENGTH_SHORT).show() }) {
-                    Text(text = "Exit")
-                }
-            }
-        }
-    )
-}
+
 /**
  * Creates a message greeting the user with a friendly message.
  * @author Steele Shreve
@@ -136,27 +109,6 @@ fun OptionMenu(appName: String) {
             }
         }
     )
-}
-/**
- * Creates a message greeting the user with a friendly message.
- * @author Steele Shreve
- * @param greeting what message displays to user
- */
-@Composable
-fun Greeting(greeting: String) {
-    Box(modifier = Modifier
-        .fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .padding(top = 56.dp)
-                .fillMaxWidth()
-                .height(128.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = greeting, textAlign = TextAlign.Center, style = MaterialTheme.typography.h6)
-        }
-    }
 }
 
 /**
