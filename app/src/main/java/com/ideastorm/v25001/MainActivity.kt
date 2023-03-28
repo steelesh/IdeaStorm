@@ -229,12 +229,12 @@ fun PriceSpinner() {
  * Creates a button that generates an activity with respect to the user-specified filters
  * @author Steele Shreve
  */
+
 @Composable
 fun GenerateActivityButton() {
-    var showLoader by remember{mutableStateOf(false)}
-    var isButtonEnabled  by remember{mutableStateOf(true)}
-    Box(modifier = Modifier
-        .fillMaxSize()) {
+    var isLoading by remember { mutableStateOf(false) }
+    var buttonEnabled by remember { mutableStateOf(true) }
+    Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
                 .padding(top = 492.dp)
@@ -243,14 +243,25 @@ fun GenerateActivityButton() {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(enabled = isButtonEnabled, onClick = { showLoader = !showLoader; isButtonEnabled = false }, modifier = Modifier
-                .width(250.dp)
-                .height(128.dp)) {
-                Text(text = stringResource(R.string.buttonText), fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
+            Button(
+                enabled = buttonEnabled,
+                onClick = {
+                    isLoading = true
+                    buttonEnabled = false
+                },
+                modifier = Modifier
+                    .width(250.dp)
+                    .height(128.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.buttonText),
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
             }
         }
     }
-    if(showLoader){
+    if (isLoading) {
         DisplayLoader()
     }
 }

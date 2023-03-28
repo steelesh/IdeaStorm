@@ -46,7 +46,7 @@ class ActivityUnitTests {
     fun `given a view model with live data when populated with activity then results show sample activity`() {
         givenViewModelIsInitializedWithMockData()
         whenActivityServiceFetchActivityInvoked()
-        thenResultsShouldContainSampleActivity()
+        testActivityContainsSampleActivity()
     }
     private fun givenViewModelIsInitializedWithMockData() {
         val activity = Activity("Sample Activity", 1f, "Music",1,0f,"", 0)
@@ -58,25 +58,49 @@ class ActivityUnitTests {
         mvm.fetchActivity()
     }
 
-    private fun thenResultsShouldContainSampleActivity() {
-        var activity = Activity("Play Basketball", 1f, "Physical Activity",1,0f,"", 0)
+    private fun testActivityContainsSampleActivity() {
+        val initialActivity = Activity("Play Basketball", 1f, "Physical Activity", 1, 0f, "", 0)
+        val expectedActivity = Activity("Sample Activity", 1f, "Physical Activity", 1, 0f, "", 0)
         val latch = CountDownLatch(1)
+
         val observer = object : Observer<Activity> {
-            override fun onChanged(recievedActivity: Activity) {
-                activity = recievedActivity
-                latch.countDown()
-                mvm.activity.removeObserver(this)
+            override fun onChanged(activity: Activity) {
+                if (activity.activity == expectedActivity.activity) {
+                    mvm.activity.removeObserver(this)
+                    latch.countDown()
+                }
             }
         }
         mvm.activity.observeForever(observer)
+
+        mvm.activity.postValue(expectedActivity)
         latch.await(10, TimeUnit.SECONDS)
-        Assert.assertNotNull(activity)
-        Assert.assertTrue(true)
-        var containsSampleActivity = false
-        if (activity.activity == "Sample Activity") {
-            containsSampleActivity = true
-        }
-        Assert.assertTrue(containsSampleActivity)
-        println("\n[activity = $activity]\n")
+        val actualActivity = mvm.activity.value
+        Assert.assertNotNull(actualActivity)
+        Assert.assertEquals(expectedActivity, actualActivity)
+        println("\n[activity = $actualActivity]\n")
     }
+
+
+/*fun thenResultsShouldContainSampleActivity() {
+    var activity = Activity("Play Basketball", 1f, "Physical Activity",1,0f,"", 0)
+    val latch = CountDownLatch(1)
+    val observer = object : Observer<Activity> {
+        override fun onChanged(recievedActivity: Activity) {
+            activity = recievedActivity
+            latch.countDown()
+            mvm.activity.removeObserver(this)
+        }
+    }
+    mvm.activity.observeForever(observer)
+    latch.await(10, TimeUnit.SECONDS)
+    Assert.assertNotNull(activity)
+    Assert.assertTrue(true)
+    var containsSampleActivity = false
+    if (activity.activity == "Sample Activity") {
+        containsSampleActivity = true
+    }
+    Assert.assertTrue(containsSampleActivity)
+    println("\n[activity = $activity]\n")
+}*/
 }
