@@ -21,10 +21,11 @@ import java.util.concurrent.TimeUnit
 class ActivityUnitTests {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
-    lateinit var mvm : MainViewModel
+    lateinit var mvm: MainViewModel
 
     @MockK
-    lateinit var mockActivityService : ActivityService
+    lateinit var mockActivityService: ActivityService
+
     @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("Main Thread")
 
@@ -48,8 +49,9 @@ class ActivityUnitTests {
         whenActivityServiceFetchActivityInvoked()
         testActivityContainsSampleActivity()
     }
+
     private fun givenViewModelIsInitializedWithMockData() {
-        val activity = Activity("Sample Activity", 1f, "Music",1,0f,"", 0)
+        val activity = Activity("Sample Activity", 1f, "Music", 1, 0f, "", 0)
         coEvery { mockActivityService.fetchActivity() } returns activity
         mvm = MainViewModel(activityService = mockActivityService)
     }
@@ -80,27 +82,4 @@ class ActivityUnitTests {
         Assert.assertEquals(expectedActivity, actualActivity)
         println("\n[activity = $actualActivity]\n")
     }
-
-
-/*fun thenResultsShouldContainSampleActivity() {
-    var activity = Activity("Play Basketball", 1f, "Physical Activity",1,0f,"", 0)
-    val latch = CountDownLatch(1)
-    val observer = object : Observer<Activity> {
-        override fun onChanged(recievedActivity: Activity) {
-            activity = recievedActivity
-            latch.countDown()
-            mvm.activity.removeObserver(this)
-        }
-    }
-    mvm.activity.observeForever(observer)
-    latch.await(10, TimeUnit.SECONDS)
-    Assert.assertNotNull(activity)
-    Assert.assertTrue(true)
-    var containsSampleActivity = false
-    if (activity.activity == "Sample Activity") {
-        containsSampleActivity = true
-    }
-    Assert.assertTrue(containsSampleActivity)
-    println("\n[activity = $activity]\n")
-}*/
 }
