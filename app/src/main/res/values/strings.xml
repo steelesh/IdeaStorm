@@ -19,4 +19,6 @@
     <string name="Free">Free</string>
     <string name="Low">Low</string>
     <string name="High">High</string>
+    <string name="Exit">Exit</string>
+    <string name="Account">Account</string>
 </resources>

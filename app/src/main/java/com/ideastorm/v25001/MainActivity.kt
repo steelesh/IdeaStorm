@@ -17,7 +17,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -100,11 +99,11 @@ fun OptionMenu(appName: String) {
                 Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false}) {
-                DropdownMenuItem(onClick = { Toast.makeText(context, "Account", Toast.LENGTH_SHORT).show() }) {
-                    Text(text = "Account")
+                DropdownMenuItem(onClick = { Toast.makeText(context, R.string.Account, Toast.LENGTH_SHORT).show() }) {
+                    Text(text = stringResource(R.string.Account))
                 }
-                DropdownMenuItem(onClick = { Toast.makeText(context, "Exit", Toast.LENGTH_SHORT).show() }) {
-                    Text(text = "Exit")
+                DropdownMenuItem(onClick = { Toast.makeText(context, R.string.Exit, Toast.LENGTH_SHORT).show() }) {
+                    Text(text = stringResource(R.string.Exit))
                 }
             }
         }
