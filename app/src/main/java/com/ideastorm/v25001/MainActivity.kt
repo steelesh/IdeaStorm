@@ -84,10 +84,10 @@ class MainActivity : ComponentActivity() {
         TopAppBar(
             modifier = Modifier.fillMaxWidth(),
             title = { Text(appName) },
-            backgroundColor =  Color(android.graphics.Color.parseColor("#D9D9D9")),
+            backgroundColor = MaterialTheme.colors.primary,
             actions = {
                 IconButton(onClick = { showMenu = !showMenu }) {
-                    Icon(Icons.Default.MoreVert, stringResource(R.string.navigation) )
+                    Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
 
                 }
                 DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
@@ -108,8 +108,36 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
-        if(showAccount){
+        if (showAccount) {
             AccountMessage()
+        }
+    }
+
+    /**
+     * Creates a message greeting the user with a friendly message.
+     * @author Steele Shreve
+     * @param greeting what message displays to user
+     */
+    @Composable
+    fun Greeting(greeting: String) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 56.dp)
+                    .fillMaxWidth()
+                    .height(128.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = greeting,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h6
+                )
+            }
         }
     }
 
@@ -142,7 +170,10 @@ class MainActivity : ComponentActivity() {
                     fontSize = 16.sp,
                     modifier = Modifier.padding(end = 8.dp)
                 )
-                Icon(imageVector = Icons.Filled.ArrowDropDown, stringResource(R.string.dropdownArrow))
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    stringResource(R.string.dropdownArrow)
+                )
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     participantOptions.forEach { participantOption ->
                         DropdownMenuItem(onClick = {
@@ -158,7 +189,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    
+
     /**
      * Creates a dropdown menu with options for selecting the type of activity
      * @author Steele Shreve
@@ -194,7 +225,10 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = typeText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
-                Icon(imageVector = Icons.Filled.ArrowDropDown, stringResource(R.string.dropdownArrow))
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    stringResource(R.string.dropdownArrow)
+                )
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     typeOptions.forEach { typeOption ->
                         DropdownMenuItem(onClick = {
@@ -236,7 +270,10 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = priceText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
-                Icon(imageVector = Icons.Filled.ArrowDropDown, stringResource(R.string.dropdownArrow))
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    stringResource(R.string.dropdownArrow)
+                )
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     priceOptions.forEach { priceOption ->
                         DropdownMenuItem(onClick = {
@@ -291,7 +328,7 @@ class MainActivity : ComponentActivity() {
             DisplayLoader()
         }
     }
-    
+
     @Composable
     fun AccountMessage() {
         Box(
@@ -331,7 +368,30 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-    
+
+    /**
+     * Displays a preview for Light and Dark Mode in the IDE without AVD
+     * @author Steele Shreve
+     */
+    @Preview(name = "Light Mode", showBackground = true)
+    @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
+    @Composable
+    fun DefaultPreview() {
+        IdeaStormTheme {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colors.background
+            ) {
+                OptionMenu("IdeaStorm")
+                Greeting("Let's find an activity for you")
+                ParticipantsSpinner()
+                ActivityTypeSpinner()
+                PriceSpinner()
+                GenerateActivityButton()
+            }
+        }
+    }
+
     fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build()
@@ -361,27 +421,9 @@ class MainActivity : ComponentActivity() {
             }
         } else {
             Log.e("MainActivity.kt", "Error Logging in " + response?.error?.errorCode)
-
-/**
- * Displays a preview for Light and Dark Mode in the IDE without AVD
- * @author Steele Shreve
- */
-@Preview(name = "Light Mode", showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
-@Composable
-fun DefaultPreview() {
-    IdeaStormTheme {
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colors.background
-        ) {
-            OptionMenu("IdeaStorm")
-            Greeting("Let's find an activity for you")
-            ParticipantsSpinner()
-            ActivityTypeSpinner()
-            PriceSpinner()
-            GenerateActivityButton()
         }
     }
 }
+
+
 
