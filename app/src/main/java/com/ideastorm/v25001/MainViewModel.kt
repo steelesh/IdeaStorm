@@ -35,8 +35,7 @@ class MainViewModel(var activityService: IActivityService = ActivityService()) :
     }
 
     fun saveUser() {
-        user?.let {
-            user ->
+        user?.let { user ->
             val handle = firestore.collection("users").document(user.uid).set(user)
             handle.addOnSuccessListener { Log.d("Firebase", "user save successful") }
             handle.addOnFailureListener { Log.e("Firebase", "user save failed") }
