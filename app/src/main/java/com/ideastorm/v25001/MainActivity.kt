@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +29,6 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.ideastorm.v25001.dto.Activity
 import com.ideastorm.v25001.dto.User
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,11 +38,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * This class represents the main activity for the IdeaStorm app and sets up the UI layout and theme
  */
 class MainActivity : ComponentActivity() {
-    var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    var selectedParticipantOption: String? = null
-    var selectedTypeOption: String? = null
-    var selectedPriceOption: String? = null
-    private val viewModel: MainViewModel by viewModel<MainViewModel>()
+    private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private var selectedParticipantOption: String? = null
+    private var selectedTypeOption: String? = null
+    private var selectedPriceOption: String? = null
+    private val viewModel: MainViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,7 +52,6 @@ class MainActivity : ComponentActivity() {
                 viewModel.user = user
             }
 
-            val activity by viewModel.activity.observeAsState(initial = emptyList<Activity>())
             IdeaStormTheme {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
@@ -392,7 +389,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun signIn() {
+    private fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build()
         )
