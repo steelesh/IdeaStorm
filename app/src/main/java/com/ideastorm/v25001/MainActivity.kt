@@ -1,5 +1,6 @@
 package com.ideastorm.v25001
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
             val activity by viewModel.activity.observeAsState(initial = emptyList<Activity>())
             IdeaStormTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.background
                 ) {
                 }
@@ -69,7 +70,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 
     /**
      * Creates a TopAppBar with the app title on the left and a navigation menu on the right
@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
             actions = {
                 IconButton(onClick = { showMenu = !showMenu }) {
                     Icon(Icons.Default.MoreVert, stringResource(R.string.navigation) )
+
                 }
                 DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                     DropdownMenuItem(onClick = {
@@ -109,34 +110,6 @@ class MainActivity : ComponentActivity() {
         )
         if(showAccount){
             AccountMessage()
-        }
-    }
-
-    /**
-     * Creates a message greeting the user with a friendly message.
-     * @author Steele Shreve
-     * @param greeting what message displays to user
-     */
-    @Composable
-    fun Greeting(greeting: String) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(top = 56.dp)
-                    .fillMaxWidth()
-                    .height(128.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = greeting,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6
-                )
-            }
         }
     }
 
@@ -180,11 +153,12 @@ class MainActivity : ComponentActivity() {
                             selectedParticipantOption = participantOption
                         }
                     }
+
                 }
             }
         }
     }
-
+    
     /**
      * Creates a dropdown menu with options for selecting the type of activity
      * @author Steele Shreve
@@ -231,6 +205,7 @@ class MainActivity : ComponentActivity() {
                             selectedTypeOption = typeOption
                         }
                     }
+
                 }
             }
         }
@@ -339,6 +314,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DisplayLoader() {
         Box(
+
             modifier = Modifier
                 .fillMaxSize()
         ) {
@@ -355,18 +331,7 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-
-    /**
-     * Displays a preview for our layout in the IDE without AVD
-     * @author Steele Shreve
-     */
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        IdeaStormTheme {
-        }
-    }
-
+    
     fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build()
@@ -396,6 +361,26 @@ class MainActivity : ComponentActivity() {
             }
         } else {
             Log.e("MainActivity.kt", "Error Logging in " + response?.error?.errorCode)
+
+/**
+ * Displays a preview for Light and Dark Mode in the IDE without AVD
+ * @author Steele Shreve
+ */
+@Preview(name = "Light Mode", showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
+@Composable
+fun DefaultPreview() {
+    IdeaStormTheme {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colors.background
+        ) {
+            OptionMenu("IdeaStorm")
+            Greeting("Let's find an activity for you")
+            ParticipantsSpinner()
+            ActivityTypeSpinner()
+            PriceSpinner()
+            GenerateActivityButton()
         }
     }
 }

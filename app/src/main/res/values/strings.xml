@@ -3,8 +3,23 @@
     <string name="appName">IdeaStorm</string>
     <string name="greeting">Let\'s find an activity for you</string>
     <string name="buttonText">Generate Activity</string>
-    <string name="navigation">Navigation</string>
     <string name="exit">Exit</string>
     <string name="account">Account</string>
     <string name="dropdownArrow">Dropdown arrow</string>
+    <string name="Navigation">Navigation</string>
+    <string name="OnePerson">One person</string>
+    <string name="TwoPerson">Two person</string>
+    <string name="Group">Group</string>
+    <string name="Education">Education</string>
+    <string name="Recreational">Recreational</string>
+    <string name="Social">Social</string>
+    <string name="Diy">Diy</string>
+    <string name="Charity">Charity</string>
+    <string name="Cooking">Cooking</string>
+    <string name="Relaxation">Relaxation</string>
+    <string name="Music">Music</string>
+    <string name="Busywork">Busywork</string>
+    <string name="Free">Free</string>
+    <string name="Low">Low</string>
+    <string name="High">High</string>
 </resources>
