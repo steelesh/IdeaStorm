@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
     fun Greeting(greeting: String) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Column(
                 modifier = Modifier
@@ -127,12 +127,12 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .height(128.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 Text(
                     text = greeting,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
                 )
             }
         }
@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Row(
                 modifier = Modifier
@@ -160,16 +160,16 @@ class MainActivity : ComponentActivity() {
                     .padding(16.dp)
                     .clickable { expanded = !expanded },
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = participantText,
                     fontSize = 16.sp,
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.padding(end = 8.dp),
                 )
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
-                    stringResource(R.string.dropdownArrow)
+                    stringResource(R.string.dropdownArrow),
                 )
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     participantOptions.forEach { participantOption ->
@@ -181,7 +181,6 @@ class MainActivity : ComponentActivity() {
                             selectedParticipantOption = participantOption
                         }
                     }
-
                 }
             }
         }
@@ -202,14 +201,14 @@ class MainActivity : ComponentActivity() {
             "Cooking",
             "Relaxation",
             "Music",
-            "Busywork"
+            "Busywork",
         )
         var typeText by remember { mutableStateOf("Activity type") }
         var expanded by remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Row(
                 modifier = Modifier
@@ -219,12 +218,12 @@ class MainActivity : ComponentActivity() {
                     .padding(16.dp)
                     .clickable { expanded = !expanded },
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = typeText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
                 Icon(
                     imageVector = Icons.Filled.ArrowDropDown,
-                    stringResource(R.string.dropdownArrow)
+                    stringResource(R.string.dropdownArrow),
                 )
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     typeOptions.forEach { typeOption ->
@@ -236,7 +235,6 @@ class MainActivity : ComponentActivity() {
                             selectedTypeOption = typeOption
                         }
                     }
-
                 }
             }
         }
@@ -254,7 +252,7 @@ class MainActivity : ComponentActivity() {
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Row(
                 modifier = Modifier
@@ -264,7 +262,7 @@ class MainActivity : ComponentActivity() {
                     .padding(16.dp)
                     .clickable { expanded = !expanded },
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = priceText, fontSize = 16.sp, modifier = Modifier.padding(end = 8.dp))
                 Icon(
@@ -296,7 +294,7 @@ class MainActivity : ComponentActivity() {
         var isButtonEnabled by remember { mutableStateOf(true) }
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Row(
                 modifier = Modifier
@@ -304,19 +302,19 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .height(56.dp),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Button(
                     enabled = isButtonEnabled,
                     onClick = { showLoader = !showLoader; isButtonEnabled = false },
                     modifier = Modifier
                         .width(250.dp)
-                        .height(128.dp)
+                        .height(128.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.buttonText),
                         fontSize = 20.sp,
-                        modifier = Modifier.padding(end = 8.dp)
+                        modifier = Modifier.padding(end = 8.dp),
                     )
                 }
             }
@@ -330,7 +328,7 @@ class MainActivity : ComponentActivity() {
     fun AccountMessage() {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Row(
                 modifier = Modifier
@@ -338,7 +336,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .height(56.dp),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(text = "Already signed in! Working as expected!")
             }
@@ -348,9 +346,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DisplayLoader() {
         Box(
-
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Row(
                 modifier = Modifier
@@ -358,7 +355,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .height(56.dp),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 CircularProgressIndicator()
             }
@@ -377,7 +374,7 @@ class MainActivity : ComponentActivity() {
         IdeaStormTheme {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colors.background
+                color = MaterialTheme.colors.background,
             ) {
                 OptionMenu("IdeaStorm")
                 Greeting("Let's find an activity for you")
