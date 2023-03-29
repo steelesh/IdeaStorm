@@ -38,7 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * This class represents the main activity for the IdeaStorm app and sets up the UI layout and theme
  */
 class MainActivity : ComponentActivity() {
-    private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private val firebaseUser: () -> FirebaseUser? = { FirebaseAuth.getInstance().currentUser }
     private var selectedParticipantOption: String? = null
     private var selectedTypeOption: String? = null
     private var selectedPriceOption: String? = null
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             viewModel.fetchActivity()
-            firebaseUser?.let {
+            firebaseUser()?.let {
                 val user = User(it.uid, "")
                 viewModel.user = user
             }
@@ -410,8 +410,7 @@ class MainActivity : ComponentActivity() {
     private fun signInResult(result: FirebaseAuthUIAuthenticationResult) {
         val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
-            firebaseUser = FirebaseAuth.getInstance().currentUser
-            firebaseUser?.let {
+            firebaseUser()?.let {
                 val user = User(it.uid, it.displayName)
                 viewModel.user = user
                 viewModel.saveUser()
