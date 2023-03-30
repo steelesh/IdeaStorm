@@ -6,9 +6,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClientInstance {
 
     private var retrofit: Retrofit? = null
-    private val BASE_URL = "https://www.boredapi.com/api/"
+    private const val BASE_URL = "https://www.boredapi.com/api/"
 
-    val retrofitInstance : Retrofit?
+    val retrofitInstance: Retrofit?
         get() {
             // has this object been created yet?
             if (retrofit == null) {

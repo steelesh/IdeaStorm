@@ -9,11 +9,11 @@ import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
 
 interface IActivityService {
-    suspend fun fetchActivity() : Activity
+    suspend fun fetchActivity(): Activity
 }
 
 class ActivityService : IActivityService {
-    override suspend fun fetchActivity() : Activity {
+    override suspend fun fetchActivity(): Activity {
         return withContext(Dispatchers.IO) {
             val service = RetrofitClientInstance.retrofitInstance?.create(IActivityDAO::class.java)
             val activity = async { service?.getActivity() }

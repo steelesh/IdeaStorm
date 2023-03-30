@@ -21,10 +21,10 @@ import java.util.concurrent.TimeUnit
 class ActivityUnitTests {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
-    lateinit var mvm : MainViewModel
+    lateinit var mvm: MainViewModel
 
     @MockK
-    lateinit var mockActivityService : ActivityService
+    lateinit var mockActivityService: ActivityService
     @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("Main Thread")
 

@@ -45,7 +45,7 @@ class ActivityTests {
     private fun thenTheActivityShouldHaveThreeParticipants() {
         assertNotNull(activity)
         var hasThreeParticipants = false
-        if (activity.participants == (3)) {
+        if (activity.participants == 3) {
             hasThreeParticipants = true
         }
         assertTrue(hasThreeParticipants)

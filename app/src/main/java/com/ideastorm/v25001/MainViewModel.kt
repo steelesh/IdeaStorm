@@ -13,15 +13,12 @@ import com.ideastorm.v25001.service.IActivityService
 import kotlinx.coroutines.launch
 
 class MainViewModel(var activityService : IActivityService = ActivityService()) : ViewModel() {
-    var activity : MutableLiveData<Activity> = MutableLiveData<Activity>()
-    var user : User? = null
+    var activity: MutableLiveData<Activity> = MutableLiveData<Activity>()
+    var user: User? = null
 
-    private lateinit var firestore : FirebaseFirestore
+    private var firestore : FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    init {
-        firestore = FirebaseFirestore.getInstance()
-        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-    }
+    init { firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build() }
 
     fun fetchActivity() {
         viewModelScope.launch {
