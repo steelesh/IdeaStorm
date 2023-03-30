@@ -35,20 +35,21 @@ import com.ideastorm.v25001.dto.User
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 /**
  * This class represents the main activity for the IdeaStorm app and sets up the UI layout and theme
  */
 class MainActivity : ComponentActivity() {
     var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private val viewModel: MainViewModel by viewModel<MainViewModel>()
     var selectedParticipantOption: String? = null
     var selectedTypeOption: String? = null
     var selectedPriceOption: String? = null
-    private val viewModel: MainViewModel by viewModel<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             viewModel.fetchActivity()
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
             firebaseUser?.let {
                 val user = User(it.uid, "")
                 viewModel.user = user
@@ -60,15 +61,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colors.background
                 ) {
+                    IdeaStormScreen()
                 }
-                OptionMenu(getString(R.string.appName))
-                Greeting(getString(R.string.greeting))
-                ParticipantsSpinner()
-                ActivityTypeSpinner()
-                PriceSpinner()
-                GenerateActivityButton()
             }
         }
+    }
+
+    @Composable
+    fun IdeaStormScreen () {
+        OptionMenu(getString(R.string.appName))
+        Greeting(getString(R.string.greeting))
+        ParticipantsSpinner()
+        ActivityTypeSpinner()
+        PriceSpinner()
+        GenerateActivityButton()
     }
 
     /**
