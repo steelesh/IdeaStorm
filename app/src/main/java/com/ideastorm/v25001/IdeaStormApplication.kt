@@ -12,6 +12,8 @@ class IdeaStormApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+
+        // Koin Implementation
         GlobalContext.startKoin {
             androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
             androidContext(this@IdeaStormApplication)

@@ -147,8 +147,12 @@ class MainActivity : ComponentActivity() {
      */
     @Composable
     fun ParticipantsSpinner() {
-        val participantOptions = listOf("One person", "Two person", "Group")
-        var participantText by remember { mutableStateOf("Number of participants") }
+        val participantOptions = listOf(
+            getString(R.string.OnePerson),
+            getString(R.string.TwoPerson),
+            getString(R.string.Group)
+        )
+        var participantText by remember { mutableStateOf(getString(R.string.NumberOfParticipants)) }
         var expanded by remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
@@ -196,18 +200,20 @@ class MainActivity : ComponentActivity() {
      */
     @Composable
     fun ActivityTypeSpinner() {
+
         val typeOptions = listOf(
-            "Education",
-            "Recreational",
-            "Social",
-            "Diy",
-            "Charity",
-            "Cooking",
-            "Relaxation",
-            "Music",
-            "Busywork"
+            getString(R.string.Education),
+            getString(R.string.Recreational),
+            getString(R.string.Social),
+            getString(R.string.Diy),
+            getString(R.string.Charity),
+            getString(R.string.Cooking),
+            getString(R.string.Relaxation),
+            getString(R.string.Music),
+            getString(R.string.Busywork)
         )
-        var typeText by remember { mutableStateOf("Activity type") }
+
+        var typeText by remember { mutableStateOf(getString(R.string.ActivityType)) }
         var expanded by remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
@@ -251,8 +257,12 @@ class MainActivity : ComponentActivity() {
      */
     @Composable
     fun PriceSpinner() {
-        val priceOptions = listOf("Free", "Low", "High")
-        var priceText by remember { mutableStateOf("Price range") }
+        val priceOptions = listOf(
+            getString(R.string.Free),
+            getString(R.string.Low),
+            getString(R.string.High)
+        )
+        var priceText by remember { mutableStateOf(getString(R.string.PriceRange)) }
         var expanded by remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
@@ -343,7 +353,7 @@ class MainActivity : ComponentActivity() {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Already signed in! Working as expected!")
+                Text(text = getString(R.string.AlreadySignedInMessage))
             }
         }
     }
@@ -382,8 +392,8 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colors.background
             ) {
-                OptionMenu("IdeaStorm")
-                Greeting("Let's find an activity for you")
+                OptionMenu(getString(R.string.appName))
+                Greeting(getString(R.string.greeting))
                 ParticipantsSpinner()
                 ActivityTypeSpinner()
                 PriceSpinner()

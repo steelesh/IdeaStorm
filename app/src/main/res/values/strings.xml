@@ -22,4 +22,8 @@
     <string name="Free">Free</string>
     <string name="Low">Low</string>
     <string name="High">High</string>
+    <string name="AlreadySignedInMessage">Already signed in! Working as expected!</string>
+    <string name="NumberOfParticipants">Number of participants</string>
+    <string name="ActivityType">Activity Type</string>
+    <string name="PriceRange">Price range</string>
 </resources>
