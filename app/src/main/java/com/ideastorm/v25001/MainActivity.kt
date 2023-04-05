@@ -334,21 +334,15 @@ class MainActivity : ComponentActivity() {
     fun DisplayActivity() {
         MaterialTheme {
             Column {
-                val openDialog = remember { mutableStateOf(false)  }
+                val openDialog = remember { mutableStateOf(true) }
 
+                if (openDialog.value) {
                     AlertDialog(
-                        onDismissRequest = {
-                            openDialog.value = false
-                        },
-                        title = {
-                            Text(text = "Generated Activity:")
-                        },
-                        text = {
-                            Text("The generated Activity")
-                        },
+                        onDismissRequest = { openDialog.value = false },
+                        title = { Text(text = "Generated Activity:") },
+                        text = { Text("The generated Activity") },
                         confirmButton = {
                             Button(
-
                                 onClick = {
                                     openDialog.value = false
                                 }) {
@@ -357,7 +351,6 @@ class MainActivity : ComponentActivity() {
                         },
                         dismissButton = {
                             Button(
-
                                 onClick = {
                                     openDialog.value = false
                                 }) {
@@ -365,8 +358,9 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     )
-            }
 
+                }
+            }
         }
     }
 
