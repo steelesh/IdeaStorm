@@ -47,6 +47,8 @@ class MainViewModel(var activityService: IActivityService = ActivityService()) :
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     Log.d(TAG, "${document.id} => ${document.data}")
+                    activity.value = document.toObject(Activity::class.java).withKey(document.id)
+                    Log.d(TAG, "${activity.value}")
                 }
             }
             .addOnFailureListener { exception ->
@@ -54,9 +56,8 @@ class MainViewModel(var activityService: IActivityService = ActivityService()) :
             }
     }
 
-    //Still setting up user collections for database
     fun saveActivity(activity: Activity) {
-        firestore.collection("users")
+        user?.uid?.let { firestore.collection("users").document(it).collection("savedActivities").document(activity.key).set(activity)}
     }
 
     fun saveUser() {
