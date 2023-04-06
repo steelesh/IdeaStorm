@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             viewModel.fetchActivity()
             firebaseUser?.let {
-                val user = User(it.uid, "")
+                val user = User(it.uid, it.displayName)
                 viewModel.user = user
             }
 
