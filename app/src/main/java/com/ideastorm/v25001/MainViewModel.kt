@@ -60,6 +60,15 @@ class MainViewModel(var activityService: IActivityService = ActivityService()) :
         user?.uid?.let { firestore.collection("users").document(it).collection("savedActivities").document(activity.key).set(activity)}
     }
 
+    fun ignoreActivity(activity: Activity) {
+        user?.uid?.let { firestore.collection("users").document(it).collection("ignoredActivities").document(activity.key).set(activity)}
+    }
+
+//    TODO: This will need to change when incorporating camera
+    fun completedActivity(activity: Activity) {
+        user?.uid?.let { firestore.collection("users").document(it).collection("completedActivities").document(activity.key).set(activity)}
+    }
+
     fun saveUser() {
         user?.let { user ->
             val handle = firestore.collection("users").document(user.uid).set(user)
