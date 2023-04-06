@@ -346,7 +346,7 @@ class MainActivity : ComponentActivity() {
                                 onClick = {
                                     openDialog.value = false
                                 }) {
-                                Text("Save")
+                                Text(stringResource(R.string.save))
                             }
                         },
                         dismissButton = {
@@ -354,7 +354,7 @@ class MainActivity : ComponentActivity() {
                                 onClick = {
                                     openDialog.value = false
                                 }) {
-                                Text("Dismiss")
+                                Text(stringResource(R.string.dismiss))
                             }
                         }
                     )
