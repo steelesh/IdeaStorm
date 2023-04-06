@@ -325,7 +325,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         if (showLoader) {
-            /*DisplayLoader()*/
+            //DisplayLoader()
             DisplayActivity()
         }
     }
