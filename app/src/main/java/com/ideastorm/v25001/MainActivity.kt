@@ -296,7 +296,8 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GenerateActivityButton() {
         var showLoader by remember { mutableStateOf(false) }
-        var isButtonEnabled by remember { mutableStateOf(true) }
+        //var isButtonEnabled by remember { mutableStateOf(true) }
+        val openDialog = remember { mutableStateOf(false) }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -310,8 +311,8 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    enabled = isButtonEnabled,
-                    onClick = { showLoader = !showLoader; isButtonEnabled = false },
+                    //enabled = isButtonEnabled,
+                    onClick = { showLoader = !showLoader; openDialog.value = true },
                     modifier = Modifier
                         .width(250.dp)
                         .height(128.dp)
@@ -326,44 +327,31 @@ class MainActivity : ComponentActivity() {
         }
         if (showLoader) {
             //DisplayLoader()
-            DisplayActivity()
         }
-    }
-
-    @Composable
-    fun DisplayActivity() {
-        MaterialTheme {
-            Column {
-                val openDialog = remember { mutableStateOf(true) }
-
-                if (openDialog.value) {
-                    AlertDialog(
-                        onDismissRequest = { openDialog.value = false },
-                        title = { Text(text = "Generated Activity:") },
-                        text = { Text("The generated Activity") },
-                        confirmButton = {
-                            Button(
-                                onClick = {
-                                    openDialog.value = false
-                                }) {
-                                Text(stringResource(R.string.save))
-                            }
-                        },
-                        dismissButton = {
-                            Button(
-                                onClick = {
-                                    openDialog.value = false
-                                }) {
-                                Text(stringResource(R.string.dismiss))
-                            }
-                        }
-                    )
-
+        if (openDialog.value) {
+            AlertDialog(
+                onDismissRequest = { openDialog.value = false },
+                title = { Text(text = "Generated Activity:") },
+                text = { Text("The generated Activity") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            openDialog.value = false
+                        }) {
+                        Text(stringResource(R.string.save))
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            openDialog.value = false
+                        }) {
+                        Text(stringResource(R.string.dismiss))
+                    }
                 }
-            }
+            )
         }
     }
-
 
     @Composable
     fun AccountMessage() {
