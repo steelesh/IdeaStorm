@@ -1,5 +1,6 @@
 package com.ideastorm.v25001
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -94,6 +95,8 @@ class MainActivity : ComponentActivity() {
                     DropdownMenuItem(onClick = {
                         if (viewModel.user != null) {
                             showAccount = !showAccount
+                            val accountIntent = Intent(this@MainActivity, AccountActivity::class.java)
+                            startActivity(accountIntent)
                         } else {
                             signIn()
                         }
