@@ -9,7 +9,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AccountActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
