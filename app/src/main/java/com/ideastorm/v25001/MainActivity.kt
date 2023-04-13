@@ -298,6 +298,8 @@ class MainActivity : ComponentActivity() {
         var showLoader by remember { mutableStateOf(false) }
         //var isButtonEnabled by remember { mutableStateOf(true) }
         val openDialog = remember { mutableStateOf(false) }
+        if(openDialog.value)
+            CustomDialog(setShowDialog = { openDialog.value = it })
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -328,6 +330,7 @@ class MainActivity : ComponentActivity() {
         if (showLoader) {
             //DisplayLoader()
         }
+        /*
         if (openDialog.value) {
             AlertDialog(
                 onDismissRequest = { openDialog.value = false },
@@ -351,6 +354,7 @@ class MainActivity : ComponentActivity() {
                 }
             )
         }
+        */
     }
 
     @Composable
