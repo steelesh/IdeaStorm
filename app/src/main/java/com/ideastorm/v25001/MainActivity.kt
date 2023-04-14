@@ -300,6 +300,7 @@ class MainActivity : ComponentActivity() {
         val openDialog = remember { mutableStateOf(false) }
         if(openDialog.value)
             CustomDialog(setShowDialog = { openDialog.value = it })
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -330,31 +331,6 @@ class MainActivity : ComponentActivity() {
         if (showLoader) {
             //DisplayLoader()
         }
-        /*
-        if (openDialog.value) {
-            AlertDialog(
-                onDismissRequest = { openDialog.value = false },
-                title = { Text(text = "Generated Activity:") },
-                text = { Text("The generated Activity") },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            openDialog.value = false
-                        }) {
-                        Text(stringResource(R.string.save))
-                    }
-                },
-                dismissButton = {
-                    Button(
-                        onClick = {
-                            openDialog.value = false
-                        }) {
-                        Text(stringResource(R.string.dismiss))
-                    }
-                }
-            )
-        }
-        */
     }
 
     @Composable

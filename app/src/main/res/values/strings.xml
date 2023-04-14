@@ -24,4 +24,5 @@
     <string name="High">High</string>
     <string name="save">Save</string>
     <string name="dismiss">Dismiss</string>
+    <string name="ignore">Ignore</string>
 </resources>

@@ -65,14 +65,14 @@ fun CustomDialog(setShowDialog: (Boolean) -> Unit) {
                                 onClick = { setShowDialog(false) },
                                 modifier = Modifier.height(50.dp)
                             ) {
-                                Text(text = stringResource(R.string.dismiss))
+                                Text(text = stringResource(R.string.ignore))
                             }
 
                             Button(
                                 onClick = { setShowDialog(false) },
                                 modifier = Modifier.height(50.dp)
                             ) {
-                                Text(text = "Ignore")
+                                Text(text = stringResource(R.string.exit))
                             }
                         }
                     }
