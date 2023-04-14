@@ -296,7 +296,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GenerateActivityButton() {
         var showLoader by remember { mutableStateOf(false) }
-        var isButtonEnabled by remember { mutableStateOf(true) }
+        //var isButtonEnabled by remember { mutableStateOf(true) }
+        val openDialog = remember { mutableStateOf(false) }
+        if(openDialog.value)
+            CustomDialog(setShowDialog = { openDialog.value = it })
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -310,8 +314,8 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    enabled = isButtonEnabled,
-                    onClick = { showLoader = !showLoader; isButtonEnabled = false },
+                    //enabled = isButtonEnabled,
+                    onClick = { showLoader = !showLoader; openDialog.value = true },
                     modifier = Modifier
                         .width(250.dp)
                         .height(128.dp)
@@ -325,7 +329,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         if (showLoader) {
-            DisplayLoader()
+            //DisplayLoader()
         }
     }
 
