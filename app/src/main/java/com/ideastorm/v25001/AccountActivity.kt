@@ -6,8 +6,12 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -83,26 +87,33 @@ class AccountActivity : ComponentActivity() {
     }
     @Composable
     fun ProfileScreen() {
-        Column(
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
         ) {
-            firebaseUser?.let { user ->
-                user.displayName?.let { name ->
-                    Text(
-                        text = name,
-                        style = MaterialTheme.typography.h4,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                user.email?.let { email ->
-                    Text(
-                        text = email,
-                        style = MaterialTheme.typography.body1,
-                        textAlign = TextAlign.Center
-                    )
+            Column(
+                modifier = Modifier
+                    .padding(top = 56.dp)
+                    .fillMaxWidth()
+                    .height(128.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                firebaseUser?.let { user ->
+                    user.displayName?.let { name ->
+                        Text(
+                            text = name,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.h4
+                        )
+                    }
+                    user.email?.let { email ->
+                        Text(
+                            text = email,
+                            style = MaterialTheme.typography.body1,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }
