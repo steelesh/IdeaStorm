@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -133,17 +132,9 @@ class MainActivity : ComponentActivity() {
                     }) {
                         Text(text = stringResource(R.string.account))
                     }
-                    DropdownMenuItem(onClick = {
-                        Toast.makeText(context, R.string.exit, Toast.LENGTH_SHORT).show()
-                    }) {
-                        Text(text = stringResource(R.string.exit))
-                    }
                 }
             }
         )
-        if (showAccount) {
-            AccountMessage()
-        }
     }
 
     /**
@@ -365,26 +356,6 @@ class MainActivity : ComponentActivity() {
             //DisplayLoader()
         }
     }
-
-    @Composable
-    fun AccountMessage() {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(top = 592.dp)
-                    .fillMaxWidth()
-                    .height(56.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Already signed in! Working as expected!")
-            }
-        }
-    }
-
     @Composable
     fun DisplayLoader() {
         Box(

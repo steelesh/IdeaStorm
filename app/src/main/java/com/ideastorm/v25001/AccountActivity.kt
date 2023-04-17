@@ -2,7 +2,6 @@ package com.ideastorm.v25001
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -75,11 +74,6 @@ class AccountActivity : ComponentActivity() {
                         context.startActivity(mainIntent)
                     }) {
                         Text(text = stringResource(R.string.Home))
-                    }
-                    DropdownMenuItem(onClick = {
-                        Toast.makeText(context, R.string.exit, Toast.LENGTH_SHORT).show()
-                    }) {
-                        Text(text = stringResource(R.string.exit))
                     }
                 }
             }
