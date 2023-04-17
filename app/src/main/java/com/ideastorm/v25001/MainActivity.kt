@@ -105,7 +105,15 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         TopAppBar(
             modifier = Modifier.fillMaxWidth(),
-            title = { Text(appName) },
+            title = {
+                Text(
+                    appName,
+                    modifier = Modifier.clickable {
+                        val mainIntent = Intent(context, MainActivity::class.java)
+                        context.startActivity(mainIntent)
+                    }
+                )
+            },
             backgroundColor = MaterialTheme.colors.primary,
             actions = {
                 IconButton(onClick = { showMenu = !showMenu }) {
