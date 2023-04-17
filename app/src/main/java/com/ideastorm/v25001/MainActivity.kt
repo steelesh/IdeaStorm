@@ -109,8 +109,10 @@ class MainActivity : ComponentActivity() {
                 Text(
                     appName,
                     modifier = Modifier.clickable {
-                        val mainIntent = Intent(context, MainActivity::class.java)
-                        context.startActivity(mainIntent)
+                        if (context !is MainActivity) {
+                            val mainIntent = Intent(context, MainActivity::class.java)
+                            context.startActivity(mainIntent)
+                        }
                     }
                 )
             },
@@ -118,7 +120,6 @@ class MainActivity : ComponentActivity() {
             actions = {
                 IconButton(onClick = { showMenu = !showMenu }) {
                     Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
-
                 }
                 DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                     DropdownMenuItem(onClick = {
