@@ -13,7 +13,7 @@ import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 
 
 @Composable
-fun CustomDialog(setShowDialog: (Boolean) -> Unit) {
+fun CustomDialog(setShowDialog: (Boolean) -> Unit, activityName: String) {
 
     IdeaStormTheme {
         Dialog(onDismissRequest = { setShowDialog(false) }) {
@@ -44,7 +44,7 @@ fun CustomDialog(setShowDialog: (Boolean) -> Unit) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "The Generated Activity",
+                                text = activityName,
                             )
                         }
 

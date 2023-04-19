@@ -298,8 +298,13 @@ class MainActivity : ComponentActivity() {
         var showLoader by remember { mutableStateOf(false) }
         //var isButtonEnabled by remember { mutableStateOf(true) }
         val openDialog = remember { mutableStateOf(false) }
+        var generatedActivity = ""
+        var participants: String?
+        var type: String?
+        var price: String?
+
         if(openDialog.value)
-            CustomDialog(setShowDialog = { openDialog.value = it })
+            CustomDialog(setShowDialog = { openDialog.value = it  }, activityName = generatedActivity )
 
         Box(
             modifier = Modifier
@@ -315,7 +320,18 @@ class MainActivity : ComponentActivity() {
             ) {
                 Button(
                     //enabled = isButtonEnabled,
-                    onClick = { showLoader = !showLoader; openDialog.value = true },
+                    onClick = {
+                        showLoader = !showLoader
+                        participants = selectedParticipantOption
+                        type = selectedTypeOption
+                        price = selectedPriceOption
+                        if (participants != null && type != null && price != null) {
+                            viewModel.fetchActivity(participants!!, type!!, price!!)
+                        }
+                        else { viewModel.fetchActivity() }
+                        generatedActivity = viewModel.activity.toString()
+                        openDialog.value = true
+                              },
                     modifier = Modifier
                         .width(250.dp)
                         .height(128.dp)
