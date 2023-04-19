@@ -10,10 +10,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
+/*
 @Composable
-fun CustomDialog(setShowDialog: (Boolean) -> Unit, activityName: String) {
+fun CustomDialog(setShowDialog: (Boolean) -> Unit) {
 
     IdeaStormTheme {
         Dialog(onDismissRequest = { setShowDialog(false) }) {
@@ -81,3 +82,4 @@ fun CustomDialog(setShowDialog: (Boolean) -> Unit, activityName: String) {
         }
     }
 }
+*/

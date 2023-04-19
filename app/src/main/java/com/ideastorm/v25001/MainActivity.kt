@@ -10,6 +10,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -298,13 +300,12 @@ class MainActivity : ComponentActivity() {
         var showLoader by remember { mutableStateOf(false) }
         //var isButtonEnabled by remember { mutableStateOf(true) }
         val openDialog = remember { mutableStateOf(false) }
-        var generatedActivity = ""
         var participants: String?
         var type: String?
         var price: String?
 
         if(openDialog.value)
-            CustomDialog(setShowDialog = { openDialog.value = it  }, activityName = generatedActivity )
+            CustomDialog(setShowDialog = { openDialog.value = it  } )
 
         Box(
             modifier = Modifier
@@ -329,7 +330,6 @@ class MainActivity : ComponentActivity() {
                             viewModel.fetchActivity(participants!!, type!!, price!!)
                         }
                         else { viewModel.fetchActivity() }
-                        generatedActivity = viewModel.activity.toString()
                         openDialog.value = true
                               },
                     modifier = Modifier
@@ -346,6 +346,77 @@ class MainActivity : ComponentActivity() {
         }
         if (showLoader) {
             //DisplayLoader()
+        }
+    }
+
+    @Composable
+    fun CustomDialog(setShowDialog: (Boolean) -> Unit) {
+        var generatedActivity = viewModel.activity.value
+
+        IdeaStormTheme {
+            Dialog(onDismissRequest = { setShowDialog(false) }) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = MaterialTheme.colors.background
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(modifier = Modifier.padding(20.dp)) {
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Generated Activity:",
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = generatedActivity.toString()
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth().padding(8.dp)
+                            ) {
+                                Button(
+                                    onClick = { setShowDialog(false) },
+                                    modifier = Modifier.height(50.dp)
+                                ) {
+                                    Text(text = stringResource(R.string.save))
+                                }
+
+                                Button(
+                                    onClick = { setShowDialog(false) },
+                                    modifier = Modifier.height(50.dp)
+                                ) {
+                                    Text(text = stringResource(R.string.ignore))
+                                }
+
+                                Button(
+                                    onClick = { setShowDialog(false) },
+                                    modifier = Modifier.height(50.dp)
+                                ) {
+                                    Text(text = stringResource(R.string.exit))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
