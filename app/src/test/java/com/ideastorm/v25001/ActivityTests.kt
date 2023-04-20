@@ -15,7 +15,7 @@ class ActivityTests {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
     private lateinit var activityService : ActivityService
-    private var activity = Activity("", 0f, "",0,0f,"", 0)
+    private var activity = Activity("", "", 0.0,0,0.0,"")
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
@@ -62,7 +62,7 @@ class ActivityTests {
     private fun thenTheActivityShouldBeSocial() {
         assertNotNull(activity)
         var isSocial = false
-        if (activity.type == ("social")) {
+        if (activity.type == ("Social")) {
             isSocial = true
         }
         assertTrue(isSocial)

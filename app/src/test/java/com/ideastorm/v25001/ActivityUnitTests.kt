@@ -49,17 +49,17 @@ class ActivityUnitTests {
         thenResultsShouldContainSampleActivity()
     }
     private fun givenViewModelIsInitializedWithMockData() {
-        val activity = Activity("Sample Activity", 1f, "Music",1,0f,"", 0)
+        val activity = Activity("Sample Activity", "Activity Type", 0.0,1,0.0,"")
         coEvery { mockActivityService.fetchActivity() } returns activity
         mvm = MainViewModel(activityService = mockActivityService)
     }
 
     private fun whenActivityServiceFetchActivityInvoked() {
-        mvm.fetchActivity()
+        mvm.fetchActivity("One Person", "Low", "Cooking")
     }
 
     private fun thenResultsShouldContainSampleActivity() {
-        var activity = Activity("Play Basketball", 1f, "Physical Activity",1,0f,"", 0)
+        var activity = Activity("Play Basketball", "Physical Activity", 0.5,1,0.1,"")
         val latch = CountDownLatch(1)
         val observer = object : Observer<Activity> {
             override fun onChanged(recievedActivity: Activity) {
