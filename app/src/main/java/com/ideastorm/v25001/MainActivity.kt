@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -31,6 +30,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +53,6 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.ideastorm.v25001.dto.Activity
 import com.ideastorm.v25001.dto.User
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -62,11 +62,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * This class represents the main activity for the IdeaStorm app and sets up the UI layout and theme
  */
 class MainActivity : ComponentActivity() {
-    var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    var selectedParticipantOption: String? = null
-    var selectedTypeOption: String? = null
-    var selectedPriceOption: String? = null
-    private val viewModel: MainViewModel by viewModel<MainViewModel>()
+    private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private lateinit var selectedParticipantOption: String
+    private lateinit var selectedTypeOption: String
+    private lateinit var selectedPriceOption: String
+    private val viewModel: MainViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -74,8 +74,6 @@ class MainActivity : ComponentActivity() {
                 val user = User(it.uid, it.displayName)
                 viewModel.user = user
             }
-
-            val activity by viewModel.activity.observeAsState(initial = emptyList<Activity>())
             IdeaStormTheme {
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
@@ -91,7 +89,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     /**
      * Creates a TopAppBar with the app title on the left and a navigation menu on the right
      * @author Steele Shreve
@@ -109,7 +106,6 @@ class MainActivity : ComponentActivity() {
             actions = {
                 IconButton(onClick = { showMenu = !showMenu }) {
                     Icon(Icons.Default.MoreVert, stringResource(R.string.Navigation))
-
                 }
                 DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                     DropdownMenuItem(onClick = {
@@ -129,11 +125,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
-        if (showAccount) {
-            AccountMessage()
-        }
     }
-
     /**
      * Creates a message greeting the user with a friendly message.
      * @author Steele Shreve
@@ -161,7 +153,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     /**
      * Creates a dropdown menu with options for selecting the number of participants
      * @author Steele Shreve
@@ -210,7 +201,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     /**
      * Creates a dropdown menu with options for selecting the type of activity
      * @author Steele Shreve
@@ -265,7 +255,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     /**
      * Creates a dropdown menu with options for selecting the price range of activity
      * @author Steele Shreve
@@ -309,7 +298,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
     /**
      * Creates a button that generates an activity with respect to the user-specified filters
      * @author Steele Shreve
@@ -317,15 +305,9 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GenerateActivityButton() {
         var showLoader by remember { mutableStateOf(false) }
-        //var isButtonEnabled by remember { mutableStateOf(true) }
         val openDialog = remember { mutableStateOf(false) }
-        var participants: String?
-        var type: String?
-        var price: String?
-
         if(openDialog.value)
             CustomDialog(setShowDialog = { openDialog.value = it  } )
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -342,12 +324,13 @@ class MainActivity : ComponentActivity() {
                     //enabled = isButtonEnabled,
                     onClick = {
                         showLoader = !showLoader
-                        participants = selectedParticipantOption
-                        type = selectedTypeOption
-                        price = selectedPriceOption
-                        viewModel.fetchActivity(participants!!, type!!, price!!)
                         openDialog.value = true
-                              },
+                        viewModel.fetchActivity(
+                            selectedParticipantOption,
+                            selectedPriceOption,
+                            selectedTypeOption
+                        )
+                    },
                     modifier = Modifier
                         .width(250.dp)
                         .height(128.dp)
@@ -360,72 +343,83 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        if (showLoader) {
-            //DisplayLoader()
-        }
     }
-
     @Composable
     fun CustomDialog(setShowDialog: (Boolean) -> Unit) {
-        var generatedActivity = viewModel.activity.value
+        val currentActivity by viewModel.activity.observeAsState()
         IdeaStormTheme {
             Dialog(onDismissRequest = { setShowDialog(false) }) {
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme.colors.background,
                 ) {
                     Box(
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.height(225.dp),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Column(modifier = Modifier.padding(20.dp)) {
-
+                        Column(modifier = Modifier.padding(bottom = 16.dp)) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "Generated Activity:",
+                                    modifier = Modifier.padding(top = 12.dp, start = 8.dp),
+                                    text = "Activity:",
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.subtitle1,
+                                    color = Color.Gray
                                 )
+                                IconButton(onClick = { setShowDialog(false) }) {
+                                    Icon(
+                                        modifier = Modifier.width(24.dp),
+                                        imageVector = Icons.Filled.Close,
+                                        contentDescription = "Close",
+                                        tint = Color.Gray
+                                    )
+                                }
                             }
-
-                            Spacer(modifier = Modifier.height(20.dp))
-
+                            Spacer(modifier = Modifier.height(24.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = generatedActivity.toString()
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 8.dp),
+                                ) {
+                                    Text(
+                                        text = currentActivity?.toString() ?: "Loading...",
+                                        style = MaterialTheme.typography.h6,
+                                        fontWeight = FontWeight.Medium,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
                             }
-
-                            Spacer(modifier = Modifier.height(20.dp))
-
+                            Spacer(modifier = Modifier.height(24.dp))
                             Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth().padding(8.dp)
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp)
                             ) {
                                 Button(
+                                    modifier = Modifier.height(48.dp),
                                     onClick = { setShowDialog(false) },
-                                    modifier = Modifier.height(50.dp)
                                 ) {
-                                    Text(text = stringResource(R.string.save))
+                                    Text(
+                                        text = stringResource(R.string.save),
+                                    )
                                 }
-
                                 Button(
+                                    modifier = Modifier.height(48.dp),
                                     onClick = { setShowDialog(false) },
-                                    modifier = Modifier.height(50.dp)
                                 ) {
-                                    Text(text = stringResource(R.string.ignore))
-                                }
-
-                                Button(
-                                    onClick = { setShowDialog(false) },
-                                    modifier = Modifier.height(50.dp)
-                                ) {
-                                    Text(text = stringResource(R.string.exit))
+                                    Text(
+                                        text = stringResource(R.string.ignore),
+                                    )
                                 }
                             }
                         }
@@ -434,55 +428,13 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    @Composable
-    fun AccountMessage() {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(top = 592.dp)
-                    .fillMaxWidth()
-                    .height(56.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Already signed in! Working as expected!")
-            }
-        }
-    }
-
-    @Composable
-    fun DisplayLoader() {
-        Box(
-
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(top = 592.dp)
-                    .fillMaxWidth()
-                    .height(56.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-    }
-    fun signIn() {
+    private fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build()
         )
-
         val signInIntent =
             AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers)
                 .build()
-
         signInLauncher.launch(signInIntent)
     }
 
@@ -491,7 +443,6 @@ class MainActivity : ComponentActivity() {
     ) { res ->
         this.signInResult(res)
     }
-
     private fun signInResult(result: FirebaseAuthUIAuthenticationResult) {
         val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
