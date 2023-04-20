@@ -1,7 +1,6 @@
 package com.ideastorm.v25001
 
 import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,9 +23,9 @@ class MainViewModel(var activityService: IActivityService = ActivityService()) :
     }
 
     fun fetchActivity(
-        participantsSelection: String = "One person",
-        priceSelection: String = "Free",
-        typeSelection: String = "Cooking"
+        participantsSelection: String,
+        priceSelection: String,
+        typeSelection: String
     ) {
         var queryBulder = firestore.collection("activities")
             .whereEqualTo("type", typeSelection.lowercase())
@@ -45,12 +44,16 @@ class MainViewModel(var activityService: IActivityService = ActivityService()) :
 
         queryBulder.get()
             .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                    activity.value = document.toObject(Activity::class.java).withKey(document.id)
-                    Log.d(TAG, "${activity.value}")
-                }
+            if (documents.size() > 0) {
+                val document = documents.first()
+                Log.d(TAG, "${document.id} => ${document.data}")
+                val fetchedActivity = document.toObject(Activity::class.java).withKey(document.id)
+                activity.value = fetchedActivity
+                Log.d(TAG, "Fetched activity: $fetchedActivity")
+            } else {
+                Log.d(TAG, "No documents found")
             }
+        }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)
             }
