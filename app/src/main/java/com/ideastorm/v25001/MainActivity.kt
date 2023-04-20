@@ -1,8 +1,8 @@
 package com.ideastorm.v25001
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -101,7 +101,17 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         TopAppBar(
             modifier = Modifier.fillMaxWidth(),
-            title = { Text(appName) },
+            title = {
+                Text(
+                    appName,
+                    modifier = Modifier.clickable {
+                        if (context !is MainActivity) {
+                            val mainIntent = Intent(context, MainActivity::class.java)
+                            context.startActivity(mainIntent)
+                        }
+                    }
+                )
+            },
             backgroundColor = MaterialTheme.colors.primary,
             actions = {
                 IconButton(onClick = { showMenu = !showMenu }) {
@@ -111,16 +121,13 @@ class MainActivity : ComponentActivity() {
                     DropdownMenuItem(onClick = {
                         if (viewModel.user != null) {
                             showAccount = !showAccount
+                            val accountIntent = Intent(this@MainActivity, AccountActivity::class.java)
+                            startActivity(accountIntent)
                         } else {
                             signIn()
                         }
                     }) {
                         Text(text = stringResource(R.string.account))
-                    }
-                    DropdownMenuItem(onClick = {
-                        Toast.makeText(context, R.string.exit, Toast.LENGTH_SHORT).show()
-                    }) {
-                        Text(text = stringResource(R.string.exit))
                     }
                 }
             }
