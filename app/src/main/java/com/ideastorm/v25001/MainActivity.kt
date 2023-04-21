@@ -415,10 +415,12 @@ class MainActivity : ComponentActivity() {
                                 Button(
                                     modifier = Modifier.height(48.dp),
                                     onClick = {
-                                        if (viewModel.user != null) {
-                                            viewModel.saveActivity(currentActivity!!)
-                                        } else {
-                                            signIn()
+                                        if (currentActivity != null) {
+                                            if (viewModel.user != null) {
+                                                viewModel.saveActivity(currentActivity!!)
+                                            } else {
+                                                signIn()
+                                            }
                                         }
                                         setShowDialog(false)
                                               },
@@ -430,10 +432,12 @@ class MainActivity : ComponentActivity() {
                                 Button(
                                     modifier = Modifier.height(48.dp),
                                     onClick = {
-                                        if (viewModel.user != null) {
-                                            viewModel.saveActivity(currentActivity!!)
-                                        } else {
-                                            signIn()
+                                        if (currentActivity != null) {
+                                            if (viewModel.user != null) {
+                                                viewModel.ignoreActivity(currentActivity!!)
+                                            } else {
+                                                signIn()
+                                            }
                                         }
                                         setShowDialog(false)
                                               },
