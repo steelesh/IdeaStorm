@@ -414,14 +414,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Button(
                                     modifier = Modifier.height(48.dp),
-                                    onClick = {
-                                        if (viewModel.user != null) {
-                                            viewModel.saveActivity(currentActivity!!)
-                                        } else {
-                                            signIn()
-                                        }
-                                        setShowDialog(false)
-                                              },
+                                    onClick = { setShowDialog(false) },
                                 ) {
                                     Text(
                                         text = stringResource(R.string.save),
@@ -429,14 +422,7 @@ class MainActivity : ComponentActivity() {
                                 }
                                 Button(
                                     modifier = Modifier.height(48.dp),
-                                    onClick = {
-                                        setShowDialog(false)
-                                        if (viewModel.user != null) {
-                                            viewModel.ignoreActivity(currentActivity!!)
-                                        } else {
-                                            signIn()
-                                        }
-                                              },
+                                    onClick = { setShowDialog(false) },
                                 ) {
                                     Text(
                                         text = stringResource(R.string.ignore),
