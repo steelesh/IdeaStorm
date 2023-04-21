@@ -1,11 +1,16 @@
 package com.ideastorm.v25001
 
+import android.content.ContentValues.TAG
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,21 +30,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import coil.compose.AsyncImage
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.ideastorm.v25001.dto.Activity
+import com.ideastorm.v25001.dto.Photo
 import com.ideastorm.v25001.dto.User
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
  * This class represents the main activity for the IdeaStorm app and sets up the UI layout and theme
  */
 class MainActivity : ComponentActivity() {
+    private var uri: Uri? = null
+    private lateinit var currentImagePath: String
+    private var strUri by mutableStateOf("")
+
     var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     var selectedParticipantOption: String? = null
     var selectedTypeOption: String? = null
@@ -315,7 +331,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 Button(
                     //enabled = isButtonEnabled,
-                    onClick = { showLoader = !showLoader; openDialog.value = true },
+                    onClick = { showLoader = !showLoader; openDialog.value = true; takePhoto() },
                     modifier = Modifier
                         .width(250.dp)
                         .height(128.dp)
@@ -327,6 +343,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+            AsyncImage(model = strUri, contentDescription = "Completed Activity")
         }
         if (showLoader) {
             //DisplayLoader()
@@ -396,6 +413,71 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun takePhoto(){
+        if(hasCameraPermission() == PERMISSION_GRANTED && hasExternalStoragePermission() == PERMISSION_GRANTED){
+            invokeCamera()
+        } else{
+            requestMultiplePermissionsLauncher.launch(arrayOf(
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA,
+            ))
+        }
+    }
+
+    private val requestMultiplePermissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
+        resultsMap ->
+        var permissionGranted = false
+        resultsMap.forEach{
+            if(it.value == true){
+                permissionGranted = it.value
+            } else{
+                permissionGranted = false
+                return@forEach
+            }
+        }
+        if (permissionGranted){
+            invokeCamera()
+        }else {
+            Toast.makeText(this, getString(R.string.cameraPermissionsText), Toast.LENGTH_LONG).show()
+        }
+    }
+    private fun invokeCamera() {
+        val file = createImageFile()
+        try{
+            uri = FileProvider.getUriForFile(this, "com.ideastorm.v31001.fileprovider", file)
+        } catch (e: Exception){
+            Log.e(TAG, "Error: ${e.message}")
+            var foo = e.message
+        }
+        getCameraImage.launch(uri)
+    }
+
+    private fun createImageFile(): File {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "Activity_${timestamp}",
+            ".jpg",
+            imageDirectory
+        ).apply {
+            currentImagePath = absolutePath
+        }
+    }
+
+    private val getCameraImage = registerForActivityResult(ActivityResultContracts.TakePicture()){
+        success ->
+        if(success) {
+            Log.i(TAG, "Image Location: $uri")
+            strUri = uri.toString()
+            val photo = Photo(localUri = uri.toString())
+            viewModel.photos.add(photo)
+
+        } else{
+            Log.e(TAG, "Image not saved. $uri")
+        }
+    }
+    fun hasCameraPermission() = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+    fun hasExternalStoragePermission() = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
     fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build()
