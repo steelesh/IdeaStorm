@@ -22,9 +22,13 @@ class ActivityUnitTests {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
     lateinit var mvm : MainViewModel
+    var participants = ""
+    var price = ""
+    var type = ""
 
     @MockK
     lateinit var mockActivityService : ActivityService
+
     @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("Main Thread")
 
@@ -55,7 +59,7 @@ class ActivityUnitTests {
     }
 
     private fun whenActivityServiceFetchActivityInvoked() {
-        mvm.fetchActivity("One Person", "Low", "Cooking")
+        mvm.fetchActivity()
     }
 
     private fun thenResultsShouldContainSampleActivity() {
@@ -78,5 +82,35 @@ class ActivityUnitTests {
         }
         Assert.assertTrue(containsSampleActivity)
         println("\n[activity = $activity]\n")
+    }
+
+    @Test
+    fun `given specific parameters when an activity is generated then the activity will match the parameters`() {
+        givenSpecificParameters()
+        whenActivityIsGenerated()
+        thenTheActivityWillMatchTheParameters()
+    }
+
+    private fun givenSpecificParameters() {
+        participants = "One Person"
+        price = "Free"
+        type = "Cooking"
+        //mvm = MainViewModel(activityService = mockActivityService)
+    }
+
+    private fun whenActivityIsGenerated() {
+        mvm.fetchActivity(participants, price, type)
+    }
+
+    private fun thenTheActivityWillMatchTheParameters() {
+        val activity = mvm.activity.value
+        Assert.assertNotNull(activity)
+        var containsActivityWithCorrectParameters = false
+        if (activity!!.participants == 1 && activity.price == 0.0 && activity.type == "Cooking") {
+            containsActivityWithCorrectParameters = true
+        }
+        Assert.assertTrue(containsActivityWithCorrectParameters)
+        println("\n[activity = $activity]\n")
+
     }
 }
