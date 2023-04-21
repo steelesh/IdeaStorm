@@ -22,9 +22,13 @@ class ActivityUnitTests {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
     lateinit var mvm : MainViewModel
+    var participants = ""
+    var price = ""
+    var type = ""
 
     @MockK
     lateinit var mockActivityService : ActivityService
+
     @OptIn(DelicateCoroutinesApi::class)
     private val mainThreadSurrogate = newSingleThreadContext("Main Thread")
 
@@ -49,7 +53,7 @@ class ActivityUnitTests {
         thenResultsShouldContainSampleActivity()
     }
     private fun givenViewModelIsInitializedWithMockData() {
-        val activity = Activity("Sample Activity", 1f, "Music",1,0f,"", 0)
+        val activity = Activity("Sample Activity", "Activity Type", 0.0,1,0.0,"")
         coEvery { mockActivityService.fetchActivity() } returns activity
         mvm = MainViewModel(activityService = mockActivityService)
     }
@@ -59,7 +63,7 @@ class ActivityUnitTests {
     }
 
     private fun thenResultsShouldContainSampleActivity() {
-        var activity = Activity("Play Basketball", 1f, "Physical Activity",1,0f,"", 0)
+        var activity = Activity("Play Basketball", "Physical Activity", 0.5,1,0.1,"")
         val latch = CountDownLatch(1)
         val observer = object : Observer<Activity> {
             override fun onChanged(recievedActivity: Activity) {
@@ -78,5 +82,35 @@ class ActivityUnitTests {
         }
         Assert.assertTrue(containsSampleActivity)
         println("\n[activity = $activity]\n")
+    }
+
+    @Test
+    fun `given specific parameters when an activity is generated then the activity will match the parameters`() {
+        givenSpecificParameters()
+        whenActivityIsGenerated()
+        thenTheActivityWillMatchTheParameters()
+    }
+
+    private fun givenSpecificParameters() {
+        participants = "One Person"
+        price = "Free"
+        type = "Cooking"
+        //mvm = MainViewModel(activityService = mockActivityService)
+    }
+
+    private fun whenActivityIsGenerated() {
+        mvm.fetchActivity(participants, price, type)
+    }
+
+    private fun thenTheActivityWillMatchTheParameters() {
+        val activity = mvm.activity.value
+        Assert.assertNotNull(activity)
+        var containsActivityWithCorrectParameters = false
+        if (activity!!.participants == 1 && activity.price == 0.0 && activity.type == "Cooking") {
+            containsActivityWithCorrectParameters = true
+        }
+        Assert.assertTrue(containsActivityWithCorrectParameters)
+        println("\n[activity = $activity]\n")
+
     }
 }
