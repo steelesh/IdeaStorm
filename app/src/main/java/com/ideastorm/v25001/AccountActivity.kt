@@ -173,7 +173,8 @@ class AccountActivity : ComponentActivity() {
             ) {
                 ProfileImage()
                 firebaseUser?.let { user ->
-                    val displayName = remember { mutableStateOf(TextFieldValue(user.displayName ?: "")) }
+                    val displayName =
+                        remember { mutableStateOf(TextFieldValue(user.displayName ?: "")) }
                     val email = remember { mutableStateOf(TextFieldValue(user.email ?: "")) }
                     val isEditing = remember { mutableStateOf(false) }
 
@@ -229,7 +230,11 @@ class AccountActivity : ComponentActivity() {
                                                 resetPasswordSnackbar.value = true
                                             } else {
                                                 val exception = task.exception
-                                                Log.w("ResetPassword", "Error sending password reset email", exception)
+                                                Log.w(
+                                                    "ResetPassword",
+                                                    "Error sending password reset email",
+                                                    exception
+                                                )
                                             }
                                         }
                                 }
@@ -256,295 +261,300 @@ class AccountActivity : ComponentActivity() {
                 }
             }
         }
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier
-                            .padding(top = 250.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top
-                    ) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            modifier = Modifier
-                                .padding(top = 150.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Text(
-                                text = "Saved Activities (${savedActivities.value.size})",
-                                style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(top = 9.dp, start = 16.dp)
-                            )
-                            IconButton(onClick = {
-                                showSavedActivities.value = !showSavedActivities.value
-                            }) {
-                                Icon(
-                                    if (showSavedActivities.value) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
-                                    contentDescription = "Toggle Ignored Activities List"
-                                )
-                            }
-                        }
-                        if (showSavedActivities.value) {
-                            val openDialog = remember { mutableStateOf(false) }
-                            val selectedActivity =
-                                remember { mutableStateOf<DocumentSnapshot?>(null) }
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 250.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier
+                        .padding(top = 150.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = "Saved Activities (${savedActivities.value.size})",
+                        style = MaterialTheme.typography.h6,
+                        modifier = Modifier.padding(top = 9.dp, start = 16.dp)
+                    )
+                    IconButton(onClick = {
+                        showSavedActivities.value = !showSavedActivities.value
+                    }) {
+                        Icon(
+                            if (showSavedActivities.value) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
+                            contentDescription = "Toggle Ignored Activities List"
+                        )
+                    }
+                }
+                if (showSavedActivities.value) {
+                    val openDialog = remember { mutableStateOf(false) }
+                    val selectedActivity =
+                        remember { mutableStateOf<DocumentSnapshot?>(null) }
 
-                            LazyColumn(
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                    ) {
+                        items(savedActivities.value) { document ->
+                            val savedActivity =
+                                document.get("activity")?.toString() ?: "No activity"
+                            Card(
                                 modifier = Modifier
-                                    .padding(top = 4.dp)
+                                    .padding(4.dp)
+                                    .fillMaxWidth(),
+                                backgroundColor = MaterialTheme.colors.surface,
+                                shape = RoundedCornerShape(4.dp),
                             ) {
-                                items(savedActivities.value) { document ->
-                                    val savedActivity =
-                                        document.get("activity")?.toString() ?: "No activity"
-                                    Card(
+                                Row(
+                                    modifier = Modifier
+                                        .border(
+                                            BorderStroke(1.dp, Color.Black),
+                                            shape = RoundedCornerShape(4.dp)
+                                        )
+                                        .background(MaterialTheme.colors.surface),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = savedActivity,
+                                        style = MaterialTheme.typography.body2,
                                         modifier = Modifier
-                                            .padding(4.dp)
-                                            .fillMaxWidth(),
-                                        backgroundColor = MaterialTheme.colors.surface,
-                                        shape = RoundedCornerShape(4.dp),
+                                            .weight(1f)
+                                            .padding(start = 20.dp)
+                                    )
+                                    IconButton(
+                                        onClick = {
+                                            selectedActivity.value = document
+                                            openDialog.value = true
+                                        },
+                                        modifier = Modifier.padding(end = 8.dp)
                                     ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .border(
-                                                    BorderStroke(1.dp, Color.Black),
-                                                    shape = RoundedCornerShape(4.dp)
-                                                )
-                                                .background(MaterialTheme.colors.surface),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Text(
-                                                text = savedActivity,
-                                                style = MaterialTheme.typography.body2,
-                                                modifier = Modifier
-                                                    .weight(1f)
-                                                    .padding(start = 20.dp)
-                                            )
-                                            IconButton(
-                                                onClick = {
-                                                    selectedActivity.value = document
-                                                    openDialog.value = true
-                                                },
-                                                modifier = Modifier.padding(end = 8.dp)
-                                            ) {
-                                                Icon(
-                                                    Icons.Filled.Clear,
-                                                    contentDescription = "Ignore saved activity"
-                                                )
-                                            }
-                                        }
-                                    }
-                                    Spacer(modifier = Modifier.height(12.dp))
-                                }
-                            }
-                            if (openDialog.value) {
-                                AlertDialog(
-                                    onDismissRequest = { openDialog.value = false },
-                                    title = { Text("Remove saved Activity") },
-                                    text = { Text("Do you want to remove this activity from the saved list?") },
-                                    confirmButton = {
-                                        Button(
-                                            onClick = {
-                                                openDialog.value = false
-                                                selectedActivity.value?.let { document ->
-                                                    firestore.runBatch { batch ->
-                                                        batch.delete(document.reference)
-                                                    }.addOnSuccessListener {
-                                                        savedActivities.value =
-                                                            savedActivities.value.filter { it != document }
-                                                    }
-                                                }
-                                            }
-                                        ) {
-                                            Text("Yes")
-                                        }
-                                    },
-                                    dismissButton = {
-                                        Button(
-                                            onClick = { openDialog.value = false }
-                                        ) {
-                                            Text("No")
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                        Row(
-                            modifier = Modifier
-                                .padding(top = 18.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Text(
-                                text = "Ignored Activities (${ignoredActivities.value.size})",
-                                style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(top = 9.dp, start = 16.dp)
-                            )
-                            IconButton(onClick = {
-                                showIgnoredActivities.value = !showIgnoredActivities.value
-                            }) {
-                                Icon(
-                                    if (showIgnoredActivities.value) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
-                                    contentDescription = "Toggle Ignored Activities List"
-                                )
-                            }
-                        }
-                        if (showIgnoredActivities.value) {
-                            LazyColumn(
-                                modifier = Modifier
-                                    .padding(top = 4.dp)
-                            ) {
-                                items(ignoredActivities.value) { document ->
-                                    val ignoredActivity =
-                                        document.get("activity")?.toString() ?: "No activity"
-                                    val showDeleteDialog = remember { mutableStateOf(false) }
-                                    if (showDeleteDialog.value) {
-                                        AlertDialog(
-                                            onDismissRequest = { showDeleteDialog.value = false },
-                                            title = { Text(text = "Remove ignored Activity") },
-                                            text = { Text(text = "Do you want to remove this activity from the ignored list?") },
-                                            confirmButton = {
-                                                Button(
-                                                    onClick = {
-                                                        showDeleteDialog.value = false
-                                                        firestore.runBatch { batch ->
-                                                            batch.delete(document.reference)
-                                                        }.addOnSuccessListener {
-                                                            ignoredActivities.value =
-                                                                ignoredActivities.value.filter { it != document }
-                                                        }
-                                                    }
-                                                ) {
-                                                    Text(text = "Delete")
-                                                }
-                                            },
-                                            dismissButton = {
-                                                Button(
-                                                    onClick = { showDeleteDialog.value = false }
-                                                ) {
-                                                    Text(text = "Cancel")
-                                                }
-                                            }
+                                        Icon(
+                                            Icons.Filled.Clear,
+                                            contentDescription = "Ignore saved activity"
                                         )
                                     }
-                                    Card(
-                                        modifier = Modifier
-                                            .padding(4.dp)
-                                            .fillMaxWidth(),
-                                        backgroundColor = MaterialTheme.colors.surface,
-                                        shape = RoundedCornerShape(4.dp),
-                                    ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .border(
-                                                    BorderStroke(1.dp, Color.Black),
-                                                    shape = RoundedCornerShape(4.dp)
-                                                )
-                                                .background(MaterialTheme.colors.surface),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Text(
-                                                text = ignoredActivity,
-                                                style = MaterialTheme.typography.body2,
-                                                modifier = Modifier
-                                                    .weight(1f)
-                                                    .padding(start = 20.dp)
-                                            )
-                                            IconButton(
-                                                onClick = { showDeleteDialog.value = true },
-                                                modifier = Modifier.padding(end = 8.dp)
-                                            ) {
-                                                Icon(
-                                                    Icons.Filled.Clear,
-                                                    contentDescription = "Remove ignored activity",
-                                                )
-                                            }
-                                        }
-                                    }
                                 }
                             }
+                            Spacer(modifier = Modifier.height(12.dp))
                         }
-                        Row(
-                            modifier = Modifier.padding(top = 54.dp)
-                        ) {
-                            val logoutDialog = remember { mutableStateOf(false) }
-                            Button(onClick = { logoutDialog.value = true }) {
-                                Text("Logout")
-                            }
-                            if (logoutDialog.value) {
-                                AlertDialog(
-                                    onDismissRequest = { logoutDialog.value = false },
-                                    title = { Text("Logout") },
-                                    text = { Text("Are you sure you want to log out?") },
-                                    confirmButton = {
-                                        Button(
-                                            onClick = {
-                                                logoutDialog.value = false
-                                                auth.signOut()
-                                                val mainIntent = Intent(context, MainActivity::class.java)
-                                                context.startActivity(mainIntent)
+                    }
+                    if (openDialog.value) {
+                        AlertDialog(
+                            onDismissRequest = { openDialog.value = false },
+                            title = { Text("Remove saved Activity") },
+                            text = { Text("Do you want to remove this activity from the saved list?") },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        openDialog.value = false
+                                        selectedActivity.value?.let { document ->
+                                            firestore.runBatch { batch ->
+                                                batch.delete(document.reference)
+                                            }.addOnSuccessListener {
+                                                savedActivities.value =
+                                                    savedActivities.value.filter { it != document }
                                             }
-                                        ) {
-                                            Text("Yes")
-                                        }
-                                    },
-                                    dismissButton = {
-                                        Button(
-                                            onClick = { logoutDialog.value = false }
-                                        ) {
-                                            Text("No")
                                         }
                                     }
-                                )
+                                ) {
+                                    Text("Yes")
+                                }
+                            },
+                            dismissButton = {
+                                Button(
+                                    onClick = { openDialog.value = false }
+                                ) {
+                                    Text("No")
+                                }
                             }
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Row {
-                            val deleteAccountDialog = remember { mutableStateOf(false) }
-                            Button(
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
-                                onClick = { deleteAccountDialog.value = true }) {
-                                Text("Delete Account")
-                            }
-                            if (deleteAccountDialog.value) {
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(top = 18.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = "Ignored Activities (${ignoredActivities.value.size})",
+                        style = MaterialTheme.typography.h6,
+                        modifier = Modifier.padding(top = 9.dp, start = 16.dp)
+                    )
+                    IconButton(onClick = {
+                        showIgnoredActivities.value = !showIgnoredActivities.value
+                    }) {
+                        Icon(
+                            if (showIgnoredActivities.value) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight,
+                            contentDescription = "Toggle Ignored Activities List"
+                        )
+                    }
+                }
+                if (showIgnoredActivities.value) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                    ) {
+                        items(ignoredActivities.value) { document ->
+                            val ignoredActivity =
+                                document.get("activity")?.toString() ?: "No activity"
+                            val showDeleteDialog = remember { mutableStateOf(false) }
+                            if (showDeleteDialog.value) {
                                 AlertDialog(
-                                    onDismissRequest = { deleteAccountDialog.value = false },
-                                    title = { Text("Delete Account") },
-                                    text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
+                                    onDismissRequest = { showDeleteDialog.value = false },
+                                    title = { Text(text = "Remove ignored Activity") },
+                                    text = { Text(text = "Do you want to remove this activity from the ignored list?") },
                                     confirmButton = {
                                         Button(
                                             onClick = {
-                                                deleteAccountDialog.value = false
-                                                user?.let { currentUser ->
-                                                    currentUser.delete().addOnCompleteListener { task ->
-                                                        if (task.isSuccessful) {
-                                                            firestore.collection("users").document(currentUser.uid).delete()
-                                                            val mainIntent = Intent(context, MainActivity::class.java)
-                                                            context.startActivity(mainIntent)
-                                                        } else {
-                                                            Log.e("DeleteAccount", "Error deleting account", task.exception)
-                                                        }
-                                                    }
+                                                showDeleteDialog.value = false
+                                                firestore.runBatch { batch ->
+                                                    batch.delete(document.reference)
+                                                }.addOnSuccessListener {
+                                                    ignoredActivities.value =
+                                                        ignoredActivities.value.filter { it != document }
                                                 }
                                             }
                                         ) {
-                                            Text("Yes")
+                                            Text(text = "Delete")
                                         }
                                     },
                                     dismissButton = {
                                         Button(
-                                            onClick = { deleteAccountDialog.value = false }
+                                            onClick = { showDeleteDialog.value = false }
                                         ) {
-                                            Text("No")
+                                            Text(text = "Cancel")
                                         }
                                     }
                                 )
+                            }
+                            Card(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .fillMaxWidth(),
+                                backgroundColor = MaterialTheme.colors.surface,
+                                shape = RoundedCornerShape(4.dp),
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .border(
+                                            BorderStroke(1.dp, Color.Black),
+                                            shape = RoundedCornerShape(4.dp)
+                                        )
+                                        .background(MaterialTheme.colors.surface),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = ignoredActivity,
+                                        style = MaterialTheme.typography.body2,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(start = 20.dp)
+                                    )
+                                    IconButton(
+                                        onClick = { showDeleteDialog.value = true },
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Clear,
+                                            contentDescription = "Remove ignored activity",
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                Row(
+                    modifier = Modifier.padding(top = 54.dp)
+                ) {
+                    val logoutDialog = remember { mutableStateOf(false) }
+                    Button(onClick = { logoutDialog.value = true }) {
+                        Text("Logout")
+                    }
+                    if (logoutDialog.value) {
+                        AlertDialog(
+                            onDismissRequest = { logoutDialog.value = false },
+                            title = { Text("Logout") },
+                            text = { Text("Are you sure you want to log out?") },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        logoutDialog.value = false
+                                        auth.signOut()
+                                        val mainIntent = Intent(context, MainActivity::class.java)
+                                        context.startActivity(mainIntent)
+                                    }
+                                ) {
+                                    Text("Yes")
+                                }
+                            },
+                            dismissButton = {
+                                Button(
+                                    onClick = { logoutDialog.value = false }
+                                ) {
+                                    Text("No")
+                                }
+                            }
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                Row {
+                    val deleteAccountDialog = remember { mutableStateOf(false) }
+                    Button(
+                        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
+                        onClick = { deleteAccountDialog.value = true }) {
+                        Text("Delete Account")
+                    }
+                    if (deleteAccountDialog.value) {
+                        AlertDialog(
+                            onDismissRequest = { deleteAccountDialog.value = false },
+                            title = { Text("Delete Account") },
+                            text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        deleteAccountDialog.value = false
+                                        user?.let { currentUser ->
+                                            currentUser.delete().addOnCompleteListener { task ->
+                                                if (task.isSuccessful) {
+                                                    firestore.collection("users")
+                                                        .document(currentUser.uid).delete()
+                                                    val mainIntent =
+                                                        Intent(context, MainActivity::class.java)
+                                                    context.startActivity(mainIntent)
+                                                } else {
+                                                    Log.e(
+                                                        "DeleteAccount",
+                                                        "Error deleting account",
+                                                        task.exception
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Text("Yes")
+                                }
+                            },
+                            dismissButton = {
+                                Button(
+                                    onClick = { deleteAccountDialog.value = false }
+                                ) {
+                                    Text("No")
+                                }
+                            }
+                        )
+                    }
+                }
             }
         }
+    }
 
     @Composable
     private fun ProfileImage() {
@@ -689,17 +699,19 @@ class AccountActivity : ComponentActivity() {
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
     }
-fun updateUserDetails(user: FirebaseUser, displayName: String) {
-    val firestore = Firebase.firestore
-    val userData = hashMapOf(
-        "displayName" to displayName
-    )
-    user.updateProfile(
-        userProfileChangeRequest {
-            this.displayName = displayName
-        }
-    )
-    firestore.collection("users")
-        .document(user.uid)
-        .set(userData, SetOptions.merge())
+
+    fun updateUserDetails(user: FirebaseUser, displayName: String) {
+        val firestore = Firebase.firestore
+        val userData = hashMapOf(
+            "displayName" to displayName
+        )
+        user.updateProfile(
+            userProfileChangeRequest {
+                this.displayName = displayName
+            }
+        )
+        firestore.collection("users")
+            .document(user.uid)
+            .set(userData, SetOptions.merge())
+    }
 }
