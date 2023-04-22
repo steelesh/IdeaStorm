@@ -5,6 +5,7 @@
     <string name="buttonText">Generate Activity</string>
     <string name="exit">Exit</string>
     <string name="account">Account</string>
+    <string name="accountButtonText">Add a profile picture</string>
     <string name="dropdownArrow">Dropdown arrow</string>
     <string name="Navigation">Navigation</string>
     <string name="OnePerson">One person</string>
@@ -26,4 +27,5 @@
     <string name="dismiss">Dismiss</string>
     <string name="ignore">Ignore</string>
     <string name="Home">Home</string>
+    <string name="cameraPermissionsText">Unable to load camera without permission.</string>
 </resources>
