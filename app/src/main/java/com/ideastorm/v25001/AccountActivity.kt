@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,12 +31,13 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -130,38 +133,31 @@ class AccountActivity : ComponentActivity() {
         ) {
             Column(
                 modifier = Modifier
-                    .padding(top = 56.dp)
+                    .padding(top = 72.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+                Icon(
+                    Icons.Default.AccountCircle,
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .size(150.dp)
+                        .padding(bottom = 16.dp),
+                )
                 firebaseUser?.let { user ->
                     val displayName = remember { mutableStateOf(TextFieldValue(user.displayName ?: "")) }
                     val email = remember { mutableStateOf(TextFieldValue(user.email ?: "")) }
                     val isEditing = remember { mutableStateOf(false) }
 
                     if (isEditing.value) {
-                        TextField(
+                        OutlinedTextField(
                             value = displayName.value,
                             onValueChange = { newValue -> displayName.value = newValue },
                             label = { Text("Display Name") },
                             singleLine = true
                         )
-                        TextField(
-                            value = email.value,
-                            onValueChange = { newValue -> email.value = newValue },
-                            label = { Text("Email") },
-                            singleLine = true
-                        )
                         Row {
-                            Button(
-                                onClick = {
-                                    updateUserDetails(user, displayName.value.text)
-                                    isEditing.value = false
-                                }
-                            ) {
-                                Text("Save")
-                            }
                             Button(
                                 onClick = {
                                     displayName.value = TextFieldValue(user.displayName ?: "")
@@ -170,6 +166,15 @@ class AccountActivity : ComponentActivity() {
                                 }
                             ) {
                                 Text("Cancel")
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    updateUserDetails(user, displayName.value.text)
+                                    isEditing.value = false
+                                }
+                            ) {
+                                Text("Save")
                             }
                         }
                     } else {
@@ -225,7 +230,7 @@ class AccountActivity : ComponentActivity() {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
-                            .padding(top = 210.dp)
+                            .padding(top = 250.dp)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top
@@ -337,7 +342,7 @@ class AccountActivity : ComponentActivity() {
                         }
                         Row(
                             modifier = Modifier
-                                .padding(top = 24.dp)
+                                .padding(top = 18.dp)
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start
                         ) {
