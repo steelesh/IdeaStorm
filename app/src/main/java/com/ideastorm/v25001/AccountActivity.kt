@@ -29,7 +29,10 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -48,11 +51,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.ideastorm.v25001.ui.theme.IdeaStormTheme
@@ -102,12 +109,14 @@ class AccountActivity : ComponentActivity() {
 
     @Composable
     fun ProfileScreen() {
+        val auth = Firebase.auth
         val firestore = Firebase.firestore
         val user = firebaseUser
         val savedActivities = remember { mutableStateOf(listOf<DocumentSnapshot>()) }
         val showSavedActivities = remember { mutableStateOf(false) }
         val ignoredActivities = remember { mutableStateOf(listOf<DocumentSnapshot>()) }
         val showIgnoredActivities = remember { mutableStateOf(false) }
+        val resetPasswordSnackbar = remember { mutableStateOf(false) }
 
         LaunchedEffect(user) {
             user?.let {
@@ -127,25 +136,96 @@ class AccountActivity : ComponentActivity() {
                 verticalArrangement = Arrangement.Top
             ) {
                 firebaseUser?.let { user ->
-                    user.displayName?.let { name ->
+                    val displayName = remember { mutableStateOf(TextFieldValue(user.displayName ?: "")) }
+                    val email = remember { mutableStateOf(TextFieldValue(user.email ?: "")) }
+                    val isEditing = remember { mutableStateOf(false) }
+
+                    if (isEditing.value) {
+                        TextField(
+                            value = displayName.value,
+                            onValueChange = { newValue -> displayName.value = newValue },
+                            label = { Text("Display Name") },
+                            singleLine = true
+                        )
+                        TextField(
+                            value = email.value,
+                            onValueChange = { newValue -> email.value = newValue },
+                            label = { Text("Email") },
+                            singleLine = true
+                        )
+                        Row {
+                            Button(
+                                onClick = {
+                                    updateUserDetails(user, displayName.value.text)
+                                    isEditing.value = false
+                                }
+                            ) {
+                                Text("Save")
+                            }
+                            Button(
+                                onClick = {
+                                    displayName.value = TextFieldValue(user.displayName ?: "")
+                                    email.value = TextFieldValue(user.email ?: "")
+                                    isEditing.value = false
+                                }
+                            ) {
+                                Text("Cancel")
+                            }
+                        }
+                    } else {
                         Text(
-                            text = name,
+                            text = displayName.value.text,
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.h4
                         )
-                    }
-                    user.email?.let { email ->
                         Text(
-                            text = email,
+                            text = email.value.text,
                             style = MaterialTheme.typography.body1,
                             textAlign = TextAlign.Center
                         )
+                        Button(onClick = { isEditing.value = true }) {
+                            Text("Edit")
+                        }
+                        Button(
+                            onClick = {
+                                user.email?.let { userEmail ->
+                                    auth.sendPasswordResetEmail(userEmail)
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                resetPasswordSnackbar.value = true
+                                            } else {
+                                                val exception = task.exception
+                                                Log.w("ResetPassword", "Error sending password reset email", exception)
+                                            }
+                                        }
+                                }
+                            },
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Text("Reset Password")
+                        }
                     }
                 }
+            }
+            if (resetPasswordSnackbar.value) {
+                Snackbar(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp),
+                    action = {
+                        TextButton(onClick = { resetPasswordSnackbar.value = false }) {
+                            Text("Dismiss", color = MaterialTheme.colors.secondary)
+                        }
+                    }
+                ) {
+                    Text("Password reset email sent")
+                }
+            }
+        }
                 Box(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
-                            .padding(top = 56.dp)
+                            .padding(top = 210.dp)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top
@@ -202,7 +282,8 @@ class AccountActivity : ComponentActivity() {
                                             Text(
                                                 text = savedActivity,
                                                 style = MaterialTheme.typography.body2,
-                                                modifier = Modifier.weight(1f)
+                                                modifier = Modifier
+                                                    .weight(1f)
                                                     .padding(start = 8.dp)
                                             )
                                             IconButton(
@@ -331,7 +412,8 @@ class AccountActivity : ComponentActivity() {
                                             Text(
                                                 text = ignoredActivity,
                                                 style = MaterialTheme.typography.body2,
-                                                modifier = Modifier.weight(1f)
+                                                modifier = Modifier
+                                                    .weight(1f)
                                                     .padding(start = 8.dp)
                                             )
                                             IconButton(
@@ -352,7 +434,6 @@ class AccountActivity : ComponentActivity() {
                 }
             }
         }
-    }
 
     private fun fetchSavedActivities(
         user: FirebaseUser,
@@ -389,4 +470,17 @@ class AccountActivity : ComponentActivity() {
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
     }
+fun updateUserDetails(user: FirebaseUser, displayName: String) {
+    val firestore = Firebase.firestore
+    val userData = hashMapOf(
+        "displayName" to displayName
+    )
+    user.updateProfile(
+        userProfileChangeRequest {
+            this.displayName = displayName
+        }
+    )
+    firestore.collection("users")
+        .document(user.uid)
+        .set(userData, SetOptions.merge())
 }
