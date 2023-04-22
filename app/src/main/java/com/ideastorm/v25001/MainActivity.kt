@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -63,10 +64,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 class MainActivity : ComponentActivity() {
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    private lateinit var selectedParticipantOption: String
-    private lateinit var selectedTypeOption: String
-    private lateinit var selectedPriceOption: String
+    private var selectedParticipantOption = mutableStateOf("")
+    private var selectedTypeOption = mutableStateOf("")
+    private var selectedPriceOption = mutableStateOf("")
     private val viewModel: MainViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -89,6 +91,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     /**
      * Creates a TopAppBar with the app title on the left and a navigation menu on the right
      * @author Steele Shreve
@@ -121,7 +124,8 @@ class MainActivity : ComponentActivity() {
                     DropdownMenuItem(onClick = {
                         if (viewModel.user != null) {
                             showAccount = !showAccount
-                            val accountIntent = Intent(this@MainActivity, AccountActivity::class.java)
+                            val accountIntent =
+                                Intent(this@MainActivity, AccountActivity::class.java)
                             startActivity(accountIntent)
                         } else {
                             signIn()
@@ -133,6 +137,7 @@ class MainActivity : ComponentActivity() {
             }
         )
     }
+
     /**
      * Creates a message greeting the user with a friendly message.
      * @author Steele Shreve
@@ -160,6 +165,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     /**
      * Creates a dropdown menu with options for selecting the number of participants
      * @author Steele Shreve
@@ -176,7 +182,7 @@ class MainActivity : ComponentActivity() {
         ) {
             Row(
                 modifier = Modifier
-                .padding(top = 192.dp)
+                    .padding(top = 192.dp)
                     .width(250.dp)
                     .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(4.dp))
                     .padding(16.dp)
@@ -198,7 +204,7 @@ class MainActivity : ComponentActivity() {
                         DropdownMenuItem(onClick = {
                             expanded = false
                             participantText = participantOption
-                            selectedParticipantOption = participantOption
+                            selectedParticipantOption.value = participantOption
                         }) {
                             Text(text = participantOption)
                         }
@@ -208,6 +214,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     /**
      * Creates a dropdown menu with options for selecting the type of activity
      * @author Steele Shreve
@@ -252,7 +259,7 @@ class MainActivity : ComponentActivity() {
                         DropdownMenuItem(onClick = {
                             expanded = false
                             typeText = typeOption
-                            selectedTypeOption = typeOption
+                            selectedTypeOption.value = typeOption
                         }) {
                             Text(text = typeOption)
                         }
@@ -262,6 +269,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     /**
      * Creates a dropdown menu with options for selecting the price range of activity
      * @author Steele Shreve
@@ -296,7 +304,7 @@ class MainActivity : ComponentActivity() {
                         DropdownMenuItem(onClick = {
                             expanded = false
                             priceText = priceOption
-                            selectedPriceOption = priceOption
+                            selectedPriceOption.value = priceOption
                         }) {
                             Text(text = priceOption)
                         }
@@ -305,16 +313,25 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     /**
      * Creates a button that generates an activity with respect to the user-specified filters
      * @author Steele Shreve
      */
     @Composable
     fun GenerateActivityButton() {
-        var showLoader by remember { mutableStateOf(false) }
         val openDialog = remember { mutableStateOf(false) }
-        if(openDialog.value)
-            CustomDialog(setShowDialog = { openDialog.value = it  } )
+        val generateValid = remember { mutableStateOf(false) }
+        LaunchedEffect(
+            selectedPriceOption.value,
+            selectedParticipantOption.value,
+            selectedTypeOption.value
+        ) {
+            generateValid.value =
+                selectedParticipantOption.value.isNotEmpty() && selectedPriceOption.value.isNotEmpty() && selectedTypeOption.value.isNotEmpty()
+        }
+        if (openDialog.value)
+            CustomDialog(setShowDialog = { openDialog.value = it })
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -328,21 +345,23 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
+                    enabled = generateValid.value,
                     onClick = {
-                        showLoader = !showLoader
                         openDialog.value = true
                         viewModel.fetchActivity(
-                            selectedParticipantOption,
-                            selectedPriceOption,
-                            selectedTypeOption
+                            selectedParticipantOption.value,
+                            selectedPriceOption.value,
+                            selectedTypeOption.value
                         )
                     },
                     modifier = Modifier
                         .width(250.dp)
                         .height(128.dp)
-                        .border( width = 1.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(4.dp))
+                        .border(
+                            width = 1.dp,
+                            color = Color.Black,
+                            shape = RoundedCornerShape(4.dp)
+                        )
                 ) {
                     Text(
                         text = stringResource(R.string.buttonText),
@@ -353,6 +372,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     fun CustomDialog(setShowDialog: (Boolean) -> Unit) {
         val currentActivity by viewModel.activity.observeAsState()
@@ -425,7 +445,7 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                         setShowDialog(false)
-                                              },
+                                    },
                                 ) {
                                     Text(
                                         text = stringResource(R.string.save),
@@ -442,7 +462,7 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                         setShowDialog(false)
-                                              },
+                                    },
                                 ) {
                                     Text(
                                         text = stringResource(R.string.ignore),
@@ -455,6 +475,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     private fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build()
@@ -470,6 +491,7 @@ class MainActivity : ComponentActivity() {
     ) { res ->
         this.signInResult(res)
     }
+
     private fun signInResult(result: FirebaseAuthUIAuthenticationResult) {
         val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
