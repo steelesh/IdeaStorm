@@ -176,9 +176,9 @@ class MainActivity : ComponentActivity() {
         ) {
             Row(
                 modifier = Modifier
-                    .padding(top = 192.dp)
+                .padding(top = 192.dp)
                     .width(250.dp)
-                    .border(BorderStroke(1.dp, Color.Black))
+                    .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(4.dp))
                     .padding(16.dp)
                     .clickable { expanded = !expanded },
                 horizontalArrangement = Arrangement.Center,
@@ -236,7 +236,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .padding(top = 292.dp)
                     .width(250.dp)
-                    .border(BorderStroke(1.dp, Color.Black))
+                    .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(4.dp))
                     .padding(16.dp)
                     .clickable { expanded = !expanded },
                 horizontalArrangement = Arrangement.Center,
@@ -280,7 +280,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .padding(top = 392.dp)
                     .width(250.dp)
-                    .border(BorderStroke(1.dp, Color.Black))
+                    .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(4.dp))
                     .padding(16.dp)
                     .clickable { expanded = !expanded },
                 horizontalArrangement = Arrangement.Center,
@@ -328,7 +328,6 @@ class MainActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    //enabled = isButtonEnabled,
                     onClick = {
                         showLoader = !showLoader
                         openDialog.value = true
@@ -341,6 +340,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .width(250.dp)
                         .height(128.dp)
+                        .border( width = 1.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(4.dp))
                 ) {
                     Text(
                         text = stringResource(R.string.buttonText),
