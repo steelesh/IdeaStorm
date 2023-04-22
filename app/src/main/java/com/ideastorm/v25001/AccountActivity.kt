@@ -13,20 +13,40 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -45,6 +65,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -52,7 +73,10 @@ import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.ideastorm.v25001.dto.Photo
@@ -120,12 +144,15 @@ class AccountActivity : ComponentActivity() {
 
     @Composable
     fun ProfileScreen() {
+        val context = LocalContext.current
+        val auth = Firebase.auth
         val firestore = Firebase.firestore
         val user = firebaseUser
         val savedActivities = remember { mutableStateOf(listOf<DocumentSnapshot>()) }
         val showSavedActivities = remember { mutableStateOf(false) }
         val ignoredActivities = remember { mutableStateOf(listOf<DocumentSnapshot>()) }
         val showIgnoredActivities = remember { mutableStateOf(false) }
+        val resetPasswordSnackbar = remember { mutableStateOf(false) }
 
         LaunchedEffect(user) {
             user?.let {
@@ -139,32 +166,100 @@ class AccountActivity : ComponentActivity() {
         ) {
             Column(
                 modifier = Modifier
-                    .padding(top = 63.dp)
+                    .padding(top = 72.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
                 ProfileImage()
                 firebaseUser?.let { user ->
-                    user.displayName?.let { name ->
+                    val displayName = remember { mutableStateOf(TextFieldValue(user.displayName ?: "")) }
+                    val email = remember { mutableStateOf(TextFieldValue(user.email ?: "")) }
+                    val isEditing = remember { mutableStateOf(false) }
+
+                    if (isEditing.value) {
+                        OutlinedTextField(
+                            value = displayName.value,
+                            onValueChange = { newValue -> displayName.value = newValue },
+                            label = { Text("Display Name") },
+                            singleLine = true
+                        )
+                        Row {
+                            Button(
+                                onClick = {
+                                    displayName.value = TextFieldValue(user.displayName ?: "")
+                                    email.value = TextFieldValue(user.email ?: "")
+                                    isEditing.value = false
+                                }
+                            ) {
+                                Text("Cancel")
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    updateUserDetails(user, displayName.value.text)
+                                    isEditing.value = false
+                                }
+                            ) {
+                                Text("Save")
+                            }
+                        }
+                    } else {
                         Text(
-                            text = name,
+                            text = displayName.value.text,
                             textAlign = TextAlign.Center,
                             style = MaterialTheme.typography.h4
                         )
-                    }
-                    user.email?.let { email ->
                         Text(
-                            text = email,
+                            text = email.value.text,
                             style = MaterialTheme.typography.body1,
                             textAlign = TextAlign.Center
                         )
+                        Button(
+                            modifier = Modifier.padding(top = 8.dp),
+                            onClick = { isEditing.value = true }) {
+                            Text("Edit Profile")
+                        }
+                        Button(
+                            onClick = {
+                                user.email?.let { userEmail ->
+                                    auth.sendPasswordResetEmail(userEmail)
+                                        .addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                resetPasswordSnackbar.value = true
+                                            } else {
+                                                val exception = task.exception
+                                                Log.w("ResetPassword", "Error sending password reset email", exception)
+                                            }
+                                        }
+                                }
+                            },
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Text("Reset Password")
+                        }
                     }
                 }
+            }
+            if (resetPasswordSnackbar.value) {
+                Snackbar(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp),
+                    action = {
+                        TextButton(onClick = { resetPasswordSnackbar.value = false }) {
+                            Text("Dismiss", color = MaterialTheme.colors.secondary)
+                        }
+                    }
+                ) {
+                    Text("Password reset email sent")
+                }
+            }
+        }
                 Box(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
-                            .padding(top = 56.dp)
+                            .padding(top = 250.dp)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top
@@ -179,7 +274,7 @@ class AccountActivity : ComponentActivity() {
                             Text(
                                 text = "Saved Activities (${savedActivities.value.size})",
                                 style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(top = 9.dp, start = 10.dp)
+                                modifier = Modifier.padding(top = 9.dp, start = 16.dp)
                             )
                             IconButton(onClick = {
                                 showSavedActivities.value = !showSavedActivities.value
@@ -223,7 +318,7 @@ class AccountActivity : ComponentActivity() {
                                                 style = MaterialTheme.typography.body2,
                                                 modifier = Modifier
                                                     .weight(1f)
-                                                    .padding(start = 8.dp)
+                                                    .padding(start = 20.dp)
                                             )
                                             IconButton(
                                                 onClick = {
@@ -276,14 +371,14 @@ class AccountActivity : ComponentActivity() {
                         }
                         Row(
                             modifier = Modifier
-                                .padding(top = 24.dp)
+                                .padding(top = 18.dp)
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start
                         ) {
                             Text(
                                 text = "Ignored Activities (${ignoredActivities.value.size})",
                                 style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(top = 9.dp, start = 10.dp)
+                                modifier = Modifier.padding(top = 9.dp, start = 16.dp)
                             )
                             IconButton(onClick = {
                                 showIgnoredActivities.value = !showIgnoredActivities.value
@@ -353,7 +448,7 @@ class AccountActivity : ComponentActivity() {
                                                 style = MaterialTheme.typography.body2,
                                                 modifier = Modifier
                                                     .weight(1f)
-                                                    .padding(start = 8.dp)
+                                                    .padding(start = 20.dp)
                                             )
                                             IconButton(
                                                 onClick = { showDeleteDialog.value = true },
@@ -369,11 +464,87 @@ class AccountActivity : ComponentActivity() {
                                 }
                             }
                         }
+                        Row(
+                            modifier = Modifier.padding(top = 54.dp)
+                        ) {
+                            val logoutDialog = remember { mutableStateOf(false) }
+                            Button(onClick = { logoutDialog.value = true }) {
+                                Text("Logout")
+                            }
+                            if (logoutDialog.value) {
+                                AlertDialog(
+                                    onDismissRequest = { logoutDialog.value = false },
+                                    title = { Text("Logout") },
+                                    text = { Text("Are you sure you want to log out?") },
+                                    confirmButton = {
+                                        Button(
+                                            onClick = {
+                                                logoutDialog.value = false
+                                                auth.signOut()
+                                                val mainIntent = Intent(context, MainActivity::class.java)
+                                                context.startActivity(mainIntent)
+                                            }
+                                        ) {
+                                            Text("Yes")
+                                        }
+                                    },
+                                    dismissButton = {
+                                        Button(
+                                            onClick = { logoutDialog.value = false }
+                                        ) {
+                                            Text("No")
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row {
+                            val deleteAccountDialog = remember { mutableStateOf(false) }
+                            Button(
+                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
+                                onClick = { deleteAccountDialog.value = true }) {
+                                Text("Delete Account")
+                            }
+                            if (deleteAccountDialog.value) {
+                                AlertDialog(
+                                    onDismissRequest = { deleteAccountDialog.value = false },
+                                    title = { Text("Delete Account") },
+                                    text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
+                                    confirmButton = {
+                                        Button(
+                                            onClick = {
+                                                deleteAccountDialog.value = false
+                                                user?.let { currentUser ->
+                                                    currentUser.delete().addOnCompleteListener { task ->
+                                                        if (task.isSuccessful) {
+                                                            firestore.collection("users").document(currentUser.uid).delete()
+                                                            val mainIntent = Intent(context, MainActivity::class.java)
+                                                            context.startActivity(mainIntent)
+                                                        } else {
+                                                            Log.e("DeleteAccount", "Error deleting account", task.exception)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ) {
+                                            Text("Yes")
+                                        }
+                                    },
+                                    dismissButton = {
+                                        Button(
+                                            onClick = { deleteAccountDialog.value = false }
+                                        ) {
+                                            Text("No")
+                                        }
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
-    }
 
     @Composable
     private fun ProfileImage() {
@@ -518,4 +689,17 @@ class AccountActivity : ComponentActivity() {
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
     }
+fun updateUserDetails(user: FirebaseUser, displayName: String) {
+    val firestore = Firebase.firestore
+    val userData = hashMapOf(
+        "displayName" to displayName
+    )
+    user.updateProfile(
+        userProfileChangeRequest {
+            this.displayName = displayName
+        }
+    )
+    firestore.collection("users")
+        .document(user.uid)
+        .set(userData, SetOptions.merge())
 }
