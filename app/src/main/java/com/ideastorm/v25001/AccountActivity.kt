@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -112,6 +113,7 @@ class AccountActivity : ComponentActivity() {
 
     @Composable
     fun ProfileScreen() {
+        val context = LocalContext.current
         val auth = Firebase.auth
         val firestore = Firebase.firestore
         val user = firebaseUser
@@ -188,8 +190,10 @@ class AccountActivity : ComponentActivity() {
                             style = MaterialTheme.typography.body1,
                             textAlign = TextAlign.Center
                         )
-                        Button(onClick = { isEditing.value = true }) {
-                            Text("Edit")
+                        Button(
+                            modifier = Modifier.padding(top = 8.dp),
+                            onClick = { isEditing.value = true }) {
+                            Text("Edit Profile")
                         }
                         Button(
                             onClick = {
@@ -245,7 +249,7 @@ class AccountActivity : ComponentActivity() {
                             Text(
                                 text = "Saved Activities (${savedActivities.value.size})",
                                 style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(top = 9.dp, start = 10.dp)
+                                modifier = Modifier.padding(top = 9.dp, start = 16.dp)
                             )
                             IconButton(onClick = {
                                 showSavedActivities.value = !showSavedActivities.value
@@ -289,7 +293,7 @@ class AccountActivity : ComponentActivity() {
                                                 style = MaterialTheme.typography.body2,
                                                 modifier = Modifier
                                                     .weight(1f)
-                                                    .padding(start = 8.dp)
+                                                    .padding(start = 20.dp)
                                             )
                                             IconButton(
                                                 onClick = {
@@ -349,7 +353,7 @@ class AccountActivity : ComponentActivity() {
                             Text(
                                 text = "Ignored Activities (${ignoredActivities.value.size})",
                                 style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(top = 9.dp, start = 10.dp)
+                                modifier = Modifier.padding(top = 9.dp, start = 16.dp)
                             )
                             IconButton(onClick = {
                                 showIgnoredActivities.value = !showIgnoredActivities.value
@@ -419,7 +423,7 @@ class AccountActivity : ComponentActivity() {
                                                 style = MaterialTheme.typography.body2,
                                                 modifier = Modifier
                                                     .weight(1f)
-                                                    .padding(start = 8.dp)
+                                                    .padding(start = 20.dp)
                                             )
                                             IconButton(
                                                 onClick = { showDeleteDialog.value = true },
@@ -433,6 +437,83 @@ class AccountActivity : ComponentActivity() {
                                         }
                                     }
                                 }
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.padding(top = 54.dp)
+                        ) {
+                            val logoutDialog = remember { mutableStateOf(false) }
+                            Button(onClick = { logoutDialog.value = true }) {
+                                Text("Logout")
+                            }
+                            if (logoutDialog.value) {
+                                AlertDialog(
+                                    onDismissRequest = { logoutDialog.value = false },
+                                    title = { Text("Logout") },
+                                    text = { Text("Are you sure you want to log out?") },
+                                    confirmButton = {
+                                        Button(
+                                            onClick = {
+                                                logoutDialog.value = false
+                                                auth.signOut()
+                                                val mainIntent = Intent(context, MainActivity::class.java)
+                                                context.startActivity(mainIntent)
+                                            }
+                                        ) {
+                                            Text("Yes")
+                                        }
+                                    },
+                                    dismissButton = {
+                                        Button(
+                                            onClick = { logoutDialog.value = false }
+                                        ) {
+                                            Text("No")
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row {
+                            val deleteAccountDialog = remember { mutableStateOf(false) }
+                            Button(
+                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
+                                onClick = { deleteAccountDialog.value = true }) {
+                                Text("Delete Account")
+                            }
+                            if (deleteAccountDialog.value) {
+                                AlertDialog(
+                                    onDismissRequest = { deleteAccountDialog.value = false },
+                                    title = { Text("Delete Account") },
+                                    text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
+                                    confirmButton = {
+                                        Button(
+                                            onClick = {
+                                                deleteAccountDialog.value = false
+                                                user?.let { currentUser ->
+                                                    currentUser.delete().addOnCompleteListener { task ->
+                                                        if (task.isSuccessful) {
+                                                            firestore.collection("users").document(currentUser.uid).delete()
+                                                            val mainIntent = Intent(context, MainActivity::class.java)
+                                                            context.startActivity(mainIntent)
+                                                        } else {
+                                                            Log.e("DeleteAccount", "Error deleting account", task.exception)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ) {
+                                            Text("Yes")
+                                        }
+                                    },
+                                    dismissButton = {
+                                        Button(
+                                            onClick = { deleteAccountDialog.value = false }
+                                        ) {
+                                            Text("No")
+                                        }
+                                    }
+                                )
                             }
                         }
                     }
