@@ -10,7 +10,7 @@
 
 ## Design Document
 
-Alex Robinson, Logan Conley, Matthew Thompson, Steele Shreve
+Alex, Logan, Steele
 
 ---
 
